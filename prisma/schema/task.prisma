@@ -1,0 +1,33 @@
+model Task {
+  id              Int       @id @default(autoincrement())
+  title           String
+  description     String
+  status          Status
+  priority        Priority
+  type            String
+  createdAt       DateTime  @default(now())
+  completedAt     DateTime?
+  updatedAt       DateTime
+  userId          String
+  createdById     String
+  updatedById     String
+
+  // Relações
+  user            User      @relation("UserTasks", fields: [userId], references: [id])
+  createdBy       User      @relation("CreatedTasks", fields: [createdById], references: [id])
+  updatedBy       User      @relation("UpdatedTasks", fields: [updatedById], references: [id])
+}
+
+enum Status {
+  pending
+  in_progress
+  completed
+  archived
+}
+
+enum Priority {
+  low
+  medium
+  high
+  urgent
+}
