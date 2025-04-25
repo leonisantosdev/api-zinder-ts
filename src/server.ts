@@ -1,29 +1,20 @@
 import express, { Application, Request, Response } from 'express';
 import cors from 'cors';
 import userRoutes from './routes/user.routes';
-
-// Configuração do cors para requisições web
-const corsConfig = {
-  origin: "*",
-  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-  allowedHeaders: 'Content-Type, Authorization',
-  // credentials: true,
-};
+import taskRoute from './routes/task.routes';
 
 const app: Application = express();
+app.use(cors({
+  origin: "http://localhost:5173",
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  allowedHeaders: 'Content-Type, Authorization',
+  credentials: false,
+}));
 app.use(express.json());
-app.use(cors(corsConfig));
 
 // Rota dos Usuários
 app.use('/user', userRoutes);
-
-
-// Rota da HOME para acesso primário
-app.get('/', (req: Request, res: Response) => {
-  res.json({ 
-    message: "Route HOME"
-   });
-});
+app.use('/task', taskRoute);
 
 // Roda o servidor
 app.listen(3333, () => {
