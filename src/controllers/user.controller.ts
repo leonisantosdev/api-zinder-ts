@@ -11,7 +11,6 @@ export class UserController {
   async createUser (req: Request, res: Response) {
     try {
       const userData = userSubsetSchema.parse(req.body);
-      console.log(userData)
 
       await userService.createUserService(userData);
       
@@ -29,7 +28,7 @@ export class UserController {
 
   async getUsers (req: Request, res: Response) {
     try {
-      const users = await userService.findAll();
+      const users = await userService.findAllUsers();
 
       res.send(users)
 

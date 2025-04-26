@@ -12,7 +12,6 @@ export class UserServices {
     .replace(/[\u0300-\u036f]/g, '') 
     .replace(/\s+/g, '.')
     .toLowerCase() + number;''
-    console.log(username)
     
     await prisma.user.create({
       data: {
@@ -26,7 +25,7 @@ export class UserServices {
       });
     };
 
-    async findAll (): Promise<object> {
+    async findAllUsers (): Promise<object> {
       return await prisma.user.findMany({
         select: {
           username: true,

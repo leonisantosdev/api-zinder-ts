@@ -8,7 +8,7 @@ const userControler = new UserController();
 // Cria um usuário
 route.post('/register', userControler.createUser);
 
-// Lista todos os usuários
+// Lista todos os usuários (ROTA PRIVADA)
 route.get('/', validToken, userControler.getUsers);
 
 // Lista um usuário pela publicId

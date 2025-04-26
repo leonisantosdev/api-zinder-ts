@@ -1,20 +1,20 @@
 import express from 'express';
-// import { UserController } from '../controllers/user.controller';
-// import { validToken } from '../middlewares/auth.middleware';
 import { TaskController } from '../controllers/task.controller';
 import { validToken } from '../middlewares/auth.middleware';
 
 const route = express.Router();
 const taskController = new TaskController();
 
-// Cria uma tarefa
+// Cria uma tarefa (ROTA PRIVADA)
 route.post('/create', validToken ,taskController.createTask );
 
-// // Lista todas as tarefas
-// route.get('/', validToken, userControler.getUsers);
+// Lista todas as tarefas do respectivo usuário (ROTA PRIVADA)
+route.get('/listAll', validToken, taskController.getAllTasks);
 
-// // Lista uma tarefa pelo publicId
-// route.get('/:id', userControler.findById);
+// Lista uma tarefa pelo publicId (ROTA PRIVADA ) 
+// E a tarefa que será lista deve ser somente do usuário logado
+// para listagem de tarefas de outros usuários deve ser concedida uma permissão de visualização do outro usuário
+// route.get('/', taskController.getTasks);
 
 // // Lista todas as tarefas pelo username do usuário
 // route.get('/:username', userControler.findById);

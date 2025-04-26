@@ -10,6 +10,7 @@ app.use(cors({
   allowedHeaders: 'Content-Type, Authorization',
   credentials: false,
 }));
+
 app.use(express.json());
 
 // Rota dos Usuários
