@@ -4,6 +4,8 @@ model User {
   username          String    @unique
   name              String
   email             String    @unique
+  isEmailVerified   Boolean
+  verifyToken       String?
   password          String
   profilePictureUrl String?
   birthDate         DateTime?

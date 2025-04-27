@@ -35,34 +35,33 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.validToken = void 0;
-var jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
-var adm_service_1 = require("../admin/adm.service");
-var JWT_SECRET = process.env.JWT_SECRET;
-var admService = new adm_service_1.AdmServices();
-var validToken = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
-    var token, id;
-    var _a;
-    return __generator(this, function (_b) {
-        try {
-            token = (_a = req.headers.authorization) === null || _a === void 0 ? void 0 : _a.split(' ')[1];
-            if (!token) {
-                res.status(401).send({ message: 'Acesso negado' });
-                return [2 /*return*/];
-            }
-            id = jsonwebtoken_1.default.verify(token, JWT_SECRET).id;
-            req.user = id;
-            next();
-        }
-        catch (error) {
-            res.status(401).send({ message: 'Token inválido ou expirado' });
-            return [2 /*return*/];
-        }
-        return [2 /*return*/];
-    });
-}); };
-exports.validToken = validToken;
+exports.AdmServices = void 0;
+var prismaConfig_1 = require("../config/prisma/prismaConfig");
+var AdmServices = /** @class */ (function () {
+    function AdmServices() {
+    }
+    AdmServices.prototype.findRole = function (userId) {
+        return __awaiter(this, void 0, void 0, function () {
+            var user;
+            var _a;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0: return [4 /*yield*/, prismaConfig_1.prisma.user.findUnique({
+                            where: {
+                                id: userId
+                            },
+                            select: {
+                                role: true
+                            }
+                        })];
+                    case 1:
+                        user = _b.sent();
+                        return [2 /*return*/, (_a = user === null || user === void 0 ? void 0 : user.role) !== null && _a !== void 0 ? _a : null];
+                }
+            });
+        });
+    };
+    return AdmServices;
+}());
+exports.AdmServices = AdmServices;

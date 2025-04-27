@@ -13,7 +13,9 @@ export const UserSchema = z.object({
   birthDate: z.coerce.date().optional().nullable(),
   gender: nativeEnum(Gender).optional().nullable(),
   isActive: z.boolean().default(true),
-  role: nativeEnum(Role).default('user'),
+  role: nativeEnum(Role),
+  isEmailVerified: z.boolean(),
+  verifyToken: z.string(),
   createdAt: z.coerce.date(),
   updatedAt: z.coerce.date(),
   lastLogin: z.coerce.date().optional().nullable()

@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
 import { userSubsetSchema, loginUserSchema } from "../schemas/user.schema";
 import { UserServices } from '../services/user.service';
-import { z } from 'zod';
 import { AuthService } from "../services/auth.service";
+import { z } from 'zod';
 
 const authService: AuthService = new AuthService();
 const userService = new UserServices();
@@ -11,10 +11,12 @@ export class UserController {
   async createUser (req: Request, res: Response) {
     try {
       const userData = userSubsetSchema.parse(req.body);
+      console.log(userData)
+      const verifyToken = await userService.createUserService(userData);
+      console.log(verifyToken)
+      await userService.sendVerificationEmail(userData.email, verifyToken);
 
-      await userService.createUserService(userData);
-      
-      res.status(201).send({ message: "Usuário cadastrado!" });
+      res.status(201).send({ message: "Usuário cadastrado! Verifique seu email." });
     } catch (err) {
       if(err instanceof z.ZodError) {
         const message =  err.errors[0]?.message || "Erro de validação, verifique os dados enviados."
@@ -26,11 +28,31 @@ export class UserController {
     };
   };
 
+  async verifyEmail (req: Request, res: Response) {
+    try {
+      const { token } = req.query;
+      console.log(token)
+
+      const user = await userService.findByToken(token as string)
+      console.log(user)
+      if(!user) {
+        res.status(400).send({ message: "Token inválido ou expirado." });
+        return;
+      }
+  
+      await userService.userUpdateByToken(user.id);
+  
+      res.status(200).send({ message: "E-mail verificado com sucesso! Agora você pode fazer login." });
+    } catch(error) {
+
+    }
+  }
+
   async getUsers (req: Request, res: Response) {
     try {
       const users = await userService.findAllUsers();
 
-      res.send(users)
+      res.send(users);
 
     } catch (error) {
       res.status(500).json({ error: "Erro ao buscar usuários" });

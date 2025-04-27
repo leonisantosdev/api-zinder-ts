@@ -35,54 +35,68 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.AuthService = void 0;
+exports.TaskServices = void 0;
 var prismaConfig_1 = require("../config/prisma/prismaConfig");
-var jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
-var console_1 = require("console");
-var hashPassword_1 = require("../utils/hashPassword");
-var JWT_SECRET = process.env.JWT_SECRET;
-(0, console_1.assert)(JWT_SECRET);
-var AuthService = /** @class */ (function () {
-    function AuthService() {
+// import { UserSubsetTask } from '../schemas/user.schema'
+var TaskServices = /** @class */ (function () {
+    function TaskServices() {
     }
-    AuthService.prototype.authLogin = function (_a) {
-        return __awaiter(this, arguments, void 0, function (_b) {
-            var user, isMatch, token;
-            var email = _b.email, password = _b.password;
+    TaskServices.prototype.createTaskService = function (_a, user_1) {
+        return __awaiter(this, arguments, void 0, function (_b, user) {
+            var title = _b.title, description = _b.description, priority = _b.priority, type = _b.type, status = _b.status;
             return __generator(this, function (_c) {
                 switch (_c.label) {
-                    case 0: return [4 /*yield*/, this.verifyEmail(email)];
+                    case 0: return [4 /*yield*/, prismaConfig_1.prisma.task.create({
+                            data: {
+                                title: title,
+                                description: description,
+                                status: status,
+                                priority: priority,
+                                type: type,
+                                user: {
+                                    connect: { id: user.id }
+                                },
+                                createdBy: {
+                                    connect: { id: user.id }
+                                }
+                            }
+                        })];
                     case 1:
-                        user = _c.sent();
-                        if (!user) {
-                            throw new Error("Usuário não encontrado.");
-                        }
-                        ;
-                        return [4 /*yield*/, (0, hashPassword_1.verifyPassword)(password, user.password)];
-                    case 2:
-                        isMatch = _c.sent();
-                        if (!isMatch) {
-                            throw new Error("Usuário não encontrado.");
-                        }
-                        ;
-                        token = this.genToken(user.id);
-                        return [2 /*return*/, token];
+                        _c.sent();
+                        return [2 /*return*/];
                 }
             });
         });
     };
-    ;
-    AuthService.prototype.verifyEmail = function (email) {
+    TaskServices.prototype.findAllTasks = function (id) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, prismaConfig_1.prisma.user.findUnique({
+                    case 0: return [4 /*yield*/, prismaConfig_1.prisma.task.findMany({
                             where: {
-                                email: email
+                                userId: id
+                            },
+                            select: {
+                                title: true,
+                                description: true,
+                                status: true,
+                                priority: true,
+                                type: true,
+                                createdAt: true,
+                                updatedAt: true,
+                                user: {
+                                    select: {
+                                        email: true,
+                                        username: true,
+                                    },
+                                },
+                                createdBy: {
+                                    select: {
+                                        email: true,
+                                        username: true,
+                                    },
+                                },
                             }
                         })];
                     case 1: return [2 /*return*/, _a.sent()];
@@ -91,10 +105,6 @@ var AuthService = /** @class */ (function () {
         });
     };
     ;
-    AuthService.prototype.genToken = function (id) {
-        return jsonwebtoken_1.default.sign({ id: id }, JWT_SECRET, { expiresIn: '1d' });
-    };
-    ;
-    return AuthService;
+    return TaskServices;
 }());
-exports.AuthService = AuthService;
+exports.TaskServices = TaskServices;

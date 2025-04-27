@@ -46,6 +46,7 @@ function hashPassword(password) {
         });
     });
 }
+;
 function verifyPassword(password, hash) {
     return __awaiter(this, void 0, void 0, function () {
         return __generator(this, function (_a) {
@@ -53,3 +54,4 @@ function verifyPassword(password, hash) {
         });
     });
 }
+;

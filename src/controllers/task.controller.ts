@@ -2,8 +2,10 @@ import { taskCreateSchema } from "../schemas/task.schema";
 import { Request, Response } from "express";
 import { TaskServices } from "../services/task.service";
 import { User } from "@prisma/client";
+import { AdmServices } from "../admin/adm.service";
 
 const taskService = new TaskServices();
+const admService = new AdmServices();
 
 export class TaskController {
   async createTask(req: Request, res: Response) {
@@ -33,10 +35,11 @@ export class TaskController {
       if(!userId) {
         throw new Error("Usuário não encontrado");
       }
-
+      
       const tasks = await taskService.findAllTasks(userId);
-
       res.status(200).send(tasks);
+      
+
     } catch (error) {
       res.status(500).json({ error: "Erro ao buscar tasks" });
     };

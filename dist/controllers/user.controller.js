@@ -35,159 +35,191 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserController = void 0;
+var nodemailer_1 = __importDefault(require("nodemailer"));
 var user_schema_1 = require("../schemas/user.schema");
 var user_service_1 = require("../services/user.service");
-var hashPassword_1 = require("../utils/hashPassword");
-var zod_1 = require("zod");
 var auth_service_1 = require("../services/auth.service");
+var zod_1 = require("zod");
+var authService = new auth_service_1.AuthService();
+var userService = new user_service_1.UserServices();
 var UserController = /** @class */ (function () {
     function UserController() {
     }
-    var _a;
-    _a = UserController;
-    UserController.createUser = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-        var userData, err_1, message;
-        var _b;
-        return __generator(_a, function (_c) {
-            switch (_c.label) {
-                case 0:
-                    _c.trys.push([0, 2, , 3]);
-                    userData = user_schema_1.UserSchema.parse(req.body);
-                    return [4 /*yield*/, user_service_1.UserServices.createUserService(userData)];
-                case 1:
-                    _c.sent();
-                    res.status(201).send({ message: "Usuário cadastrado!" });
-                    return [3 /*break*/, 3];
-                case 2:
-                    err_1 = _c.sent();
-                    if (err_1 instanceof zod_1.z.ZodError) {
-                        message = ((_b = err_1.errors[0]) === null || _b === void 0 ? void 0 : _b.message) || "Erro de validação, verifique os dados enviados.";
-                        res.status(400).send({ message: message });
+    UserController.prototype.sendVerificationEmail = function (email, token) {
+        return __awaiter(this, void 0, void 0, function () {
+            var transporter, mailOptions;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        transporter = nodemailer_1.default.createTransport({
+                            service: 'gmail',
+                            auth: {
+                                user: process.env.EMAIL_USER,
+                                pass: process.env.EMAIL_PASS
+                            }
+                        });
+                        mailOptions = {
+                            from: process.env.EMAIL_USER,
+                            to: email,
+                            subject: "Verificação de E-mail",
+                            text: "Clique no link para verificar sua conta:\n        ".concat(process.env.BASE_URL, "/verify-email?token=").concat(token)
+                        };
+                        return [4 /*yield*/, transporter.sendMail(mailOptions)];
+                    case 1:
+                        _a.sent();
                         return [2 /*return*/];
-                    }
-                    ;
-                    res.status(500).send({ error: "Erro interno no servidor" });
-                    return [3 /*break*/, 3];
-                case 3:
-                    ;
-                    return [2 /*return*/];
-            }
+                }
+            });
         });
-    }); };
-    UserController.getUsers = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-        var users, error_1;
-        return __generator(_a, function (_b) {
-            switch (_b.label) {
-                case 0:
-                    _b.trys.push([0, 2, , 3]);
-                    return [4 /*yield*/, user_service_1.UserServices.findAll()];
-                case 1:
-                    users = _b.sent();
-                    res.send(users);
-                    return [3 /*break*/, 3];
-                case 2:
-                    error_1 = _b.sent();
-                    res.status(500).json({ error: "Erro ao buscar usuários" });
-                    return [3 /*break*/, 3];
-                case 3:
-                    ;
-                    return [2 /*return*/];
-            }
-        });
-    }); };
-    UserController.findById = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-        var publicId, user, error_2;
-        return __generator(_a, function (_b) {
-            switch (_b.label) {
-                case 0:
-                    _b.trys.push([0, 2, , 3]);
-                    publicId = Number(req.params.id);
-                    return [4 /*yield*/, user_service_1.UserServices.findByIdService(publicId)];
-                case 1:
-                    user = _b.sent();
-                    if (!user) {
-                        res.status(400).send({ message: "Usuário não encontrado" });
-                    }
-                    res.status(200).send(user);
-                    return [3 /*break*/, 3];
-                case 2:
-                    error_2 = _b.sent();
-                    res.status(500).send("Erro interno do servidor");
-                    return [3 /*break*/, 3];
-                case 3:
-                    ;
-                    return [2 /*return*/];
-            }
-        });
-    }); };
-    UserController.updateUser = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-        var publicId, userData, error_3;
-        return __generator(_a, function (_b) {
-            switch (_b.label) {
-                case 0:
-                    _b.trys.push([0, 3, , 4]);
-                    publicId = Number(req.params.id);
-                    userData = user_schema_1.UserSchema.parse(req.body);
-                    return [4 /*yield*/, user_service_1.UserServices.findByIdService(publicId)];
-                case 1:
-                    if (!(_b.sent())) {
-                        res.status(404).send({ message: "Usuário não encontrado" });
+    };
+    UserController.prototype.createUser = function (req, res) {
+        return __awaiter(this, void 0, void 0, function () {
+            var userData, err_1, message;
+            var _a;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0:
+                        _b.trys.push([0, 2, , 3]);
+                        userData = user_schema_1.userSubsetSchema.parse(req.body);
+                        // const emailVerifyToken = uuidv4();
+                        return [4 /*yield*/, userService.createUserService(userData)];
+                    case 1:
+                        // const emailVerifyToken = uuidv4();
+                        _b.sent();
+                        res.status(201).send({ message: "Usuário cadastrado!" });
+                        return [3 /*break*/, 3];
+                    case 2:
+                        err_1 = _b.sent();
+                        if (err_1 instanceof zod_1.z.ZodError) {
+                            message = ((_a = err_1.errors[0]) === null || _a === void 0 ? void 0 : _a.message) || "Erro de validação, verifique os dados enviados.";
+                            res.status(400).send({ message: message });
+                            return [2 /*return*/];
+                        }
+                        ;
+                        res.status(500).send({ error: "Erro interno no servidor" });
+                        return [3 /*break*/, 3];
+                    case 3:
+                        ;
                         return [2 /*return*/];
-                    }
-                    return [4 /*yield*/, user_service_1.UserServices.updateUserById(publicId, userData)];
-                case 2:
-                    _b.sent();
-                    res.status(201).send("Usuário atualizado.");
-                    return [2 /*return*/];
-                case 3:
-                    error_3 = _b.sent();
-                    console.log(error_3);
-                    return [3 /*break*/, 4];
-                case 4:
-                    ;
-                    return [2 /*return*/];
-            }
+                }
+            });
         });
-    }); };
-    UserController.login = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-        var _b, email, password, user, isMatch, token, error_4;
-        return __generator(_a, function (_c) {
-            switch (_c.label) {
-                case 0:
-                    _c.trys.push([0, 4, , 5]);
-                    _b = user_schema_1.loginUserSchema.parse(req.body), email = _b.email, password = _b.password;
-                    return [4 /*yield*/, auth_service_1.AuthService.verifyEmail(email)];
-                case 1:
-                    user = _c.sent();
-                    if (!user) {
-                        res.status(404).json({ message: "Usuário não encontrado" });
+    };
+    ;
+    UserController.prototype.getUsers = function (req, res) {
+        return __awaiter(this, void 0, void 0, function () {
+            var users, error_1;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 2, , 3]);
+                        return [4 /*yield*/, userService.findAllUsers()];
+                    case 1:
+                        users = _a.sent();
+                        res.send(users);
+                        return [3 /*break*/, 3];
+                    case 2:
+                        error_1 = _a.sent();
+                        res.status(500).json({ error: "Erro ao buscar usuários" });
+                        return [3 /*break*/, 3];
+                    case 3:
+                        ;
                         return [2 /*return*/];
-                    }
-                    ;
-                    return [4 /*yield*/, (0, hashPassword_1.verifyPassword)(password, user === null || user === void 0 ? void 0 : user.password)];
-                case 2:
-                    isMatch = _c.sent();
-                    if (!isMatch) {
-                        res.status(400).json({ message: "Senha inválida" });
-                        return [2 /*return*/];
-                    }
-                    return [4 /*yield*/, auth_service_1.AuthService.genToken(user.id)];
-                case 3:
-                    token = _c.sent();
-                    res.status(200).send({ message: token });
-                    return [2 /*return*/];
-                case 4:
-                    error_4 = _c.sent();
-                    res.status(500).json({ error: error_4 });
-                    return [2 /*return*/];
-                case 5:
-                    ;
-                    return [2 /*return*/];
-            }
+                }
+            });
         });
-    }); };
+    };
+    ;
+    UserController.prototype.findById = function (req, res) {
+        return __awaiter(this, void 0, void 0, function () {
+            var publicId, user, error_2;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 2, , 3]);
+                        publicId = Number(req.params.id);
+                        return [4 /*yield*/, userService.findByIdService(publicId)];
+                    case 1:
+                        user = _a.sent();
+                        if (!user) {
+                            res.status(400).send({ message: "Usuário não encontrado" });
+                        }
+                        res.status(200).send(user);
+                        return [3 /*break*/, 3];
+                    case 2:
+                        error_2 = _a.sent();
+                        res.status(500).send("Erro interno do servidor");
+                        return [3 /*break*/, 3];
+                    case 3:
+                        ;
+                        return [2 /*return*/];
+                }
+            });
+        });
+    };
+    ;
+    UserController.prototype.updateUser = function (req, res) {
+        return __awaiter(this, void 0, void 0, function () {
+            var publicId, userData, error_3;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 3, , 4]);
+                        publicId = Number(req.params.id);
+                        userData = user_schema_1.userSubsetSchema.parse(req.body);
+                        return [4 /*yield*/, userService.findByIdService(publicId)];
+                    case 1:
+                        if (!(_a.sent())) {
+                            res.status(404).send({ message: "Usuário não encontrado" });
+                            return [2 /*return*/];
+                        }
+                        return [4 /*yield*/, userService.updateUserById(publicId, userData)];
+                    case 2:
+                        _a.sent();
+                        res.status(201).send("Usuário atualizado.");
+                        return [2 /*return*/];
+                    case 3:
+                        error_3 = _a.sent();
+                        console.log(error_3);
+                        return [3 /*break*/, 4];
+                    case 4:
+                        ;
+                        return [2 /*return*/];
+                }
+            });
+        });
+    };
+    ;
+    UserController.prototype.login = function (req, res) {
+        return __awaiter(this, void 0, void 0, function () {
+            var _a, email, password, token, error_4;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0:
+                        _b.trys.push([0, 2, , 3]);
+                        _a = user_schema_1.loginUserSchema.parse(req.body), email = _a.email, password = _a.password;
+                        return [4 /*yield*/, authService.authLogin({ email: email, password: password })];
+                    case 1:
+                        token = _b.sent();
+                        res.status(200).send({ token: token });
+                        return [2 /*return*/];
+                    case 2:
+                        error_4 = _b.sent();
+                        res.status(500).json({ error: error_4 });
+                        return [2 /*return*/];
+                    case 3:
+                        ;
+                        return [2 /*return*/];
+                }
+            });
+        });
+    };
+    ;
     return UserController;
 }());
 exports.UserController = UserController;

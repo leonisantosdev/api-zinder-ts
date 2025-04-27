@@ -39,86 +39,107 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserServices = void 0;
 var prismaConfig_1 = require("../config/prisma/prismaConfig");
 var hashPassword_1 = require("../utils/hashPassword");
+var randomNumber_1 = require("../utils/randomNumber");
 var UserServices = /** @class */ (function () {
     function UserServices() {
     }
-    var _a;
-    _a = UserServices;
-    UserServices.createUserService = function (_b) { return __awaiter(void 0, [_b], void 0, function (_c) {
-        var hashedPassword;
-        var name = _c.name, email = _c.email, password = _c.password;
-        return __generator(_a, function (_d) {
-            switch (_d.label) {
-                case 0: return [4 /*yield*/, (0, hashPassword_1.hashPassword)(password)];
-                case 1:
-                    hashedPassword = _d.sent();
-                    return [4 /*yield*/, prismaConfig_1.prisma.user.create({
-                            data: {
-                                name: name,
-                                email: email,
-                                password: hashedPassword,
+    UserServices.prototype.createUserService = function (_a) {
+        return __awaiter(this, arguments, void 0, function (_b) {
+            var hashedPassword, username;
+            var name = _b.name, email = _b.email, password = _b.password;
+            return __generator(this, function (_c) {
+                switch (_c.label) {
+                    case 0: return [4 /*yield*/, (0, hashPassword_1.hashPassword)(password)];
+                    case 1:
+                        hashedPassword = _c.sent();
+                        username = name
+                            .normalize('NFD')
+                            .replace(/[\u0300-\u036f]/g, '')
+                            .replace(/\s+/g, '.')
+                            .toLowerCase() + randomNumber_1.number;
+                        '';
+                        return [4 /*yield*/, prismaConfig_1.prisma.user.create({
+                                data: {
+                                    username: username,
+                                    name: name,
+                                    email: email,
+                                    password: hashedPassword,
+                                    role: 'user',
+                                    isActive: true,
+                                }
+                            })];
+                    case 2:
+                        _c.sent();
+                        return [2 /*return*/];
+                }
+            });
+        });
+    };
+    ;
+    UserServices.prototype.findAllUsers = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, prismaConfig_1.prisma.user.findMany({
+                            select: {
+                                username: true,
+                                name: true,
+                                email: true,
                             }
                         })];
-                case 2:
-                    _d.sent();
-                    return [2 /*return*/];
-            }
+                    case 1: return [2 /*return*/, _a.sent()];
+                }
+            });
         });
-    }); };
-    UserServices.findAll = function () { return __awaiter(void 0, void 0, void 0, function () {
-        return __generator(_a, function (_b) {
-            switch (_b.label) {
-                case 0: return [4 /*yield*/, prismaConfig_1.prisma.user.findMany({
-                        select: {
-                            name: true,
-                            email: true,
-                        }
-                    })];
-                case 1: return [2 /*return*/, _b.sent()];
-            }
-        });
-    }); };
-    UserServices.findByIdService = function (publicId) { return __awaiter(void 0, void 0, void 0, function () {
-        return __generator(_a, function (_b) {
-            switch (_b.label) {
-                case 0: return [4 /*yield*/, prismaConfig_1.prisma.user.findUnique({
-                        where: {
-                            publicId: publicId
-                        },
-                        select: {
-                            publicId: true,
-                            name: true,
-                            email: true,
-                        }
-                    })];
-                case 1: return [2 /*return*/, _b.sent()];
-            }
-        });
-    }); };
-    UserServices.updateUserById = function (publicId_1, _b) { return __awaiter(void 0, [publicId_1, _b], void 0, function (publicId, _c) {
-        var hashedPassword;
-        var name = _c.name, email = _c.email, password = _c.password;
-        return __generator(_a, function (_d) {
-            switch (_d.label) {
-                case 0: return [4 /*yield*/, (0, hashPassword_1.hashPassword)(password)];
-                case 1:
-                    hashedPassword = _d.sent();
-                    return [4 /*yield*/, prismaConfig_1.prisma.user.update({
+    };
+    ;
+    UserServices.prototype.findByIdService = function (publicId) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, prismaConfig_1.prisma.user.findUnique({
                             where: {
                                 publicId: publicId
                             },
-                            data: {
-                                name: name,
-                                email: email,
-                                password: hashedPassword
-                            },
+                            select: {
+                                publicId: true,
+                                name: true,
+                                email: true,
+                            }
                         })];
-                case 2:
-                    _d.sent();
-                    return [2 /*return*/];
-            }
+                    case 1: return [2 /*return*/, _a.sent()];
+                }
+            });
         });
-    }); };
+    };
+    ;
+    UserServices.prototype.updateUserById = function (publicId_1, _a) {
+        return __awaiter(this, arguments, void 0, function (publicId, _b) {
+            var hashedPassword;
+            var name = _b.name, email = _b.email, password = _b.password;
+            return __generator(this, function (_c) {
+                switch (_c.label) {
+                    case 0: return [4 /*yield*/, (0, hashPassword_1.hashPassword)(password)];
+                    case 1:
+                        hashedPassword = _c.sent();
+                        return [4 /*yield*/, prismaConfig_1.prisma.user.update({
+                                where: {
+                                    publicId: publicId
+                                },
+                                data: {
+                                    name: name,
+                                    email: email,
+                                    password: hashedPassword
+                                },
+                            })];
+                    case 2:
+                        _c.sent();
+                        return [2 /*return*/];
+                }
+            });
+        });
+    };
+    ;
     return UserServices;
 }());
 exports.UserServices = UserServices;

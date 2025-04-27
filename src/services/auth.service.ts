@@ -22,6 +22,7 @@ export class AuthService {
     };
 
     const token = this.genToken(user.id);
+      // console.log(token)
       return token;
     };
 

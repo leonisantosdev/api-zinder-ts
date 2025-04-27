@@ -35,66 +35,84 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.AuthService = void 0;
-var prismaConfig_1 = require("../config/prisma/prismaConfig");
-var jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
-var console_1 = require("console");
-var hashPassword_1 = require("../utils/hashPassword");
-var JWT_SECRET = process.env.JWT_SECRET;
-(0, console_1.assert)(JWT_SECRET);
-var AuthService = /** @class */ (function () {
-    function AuthService() {
+exports.TaskController = void 0;
+var task_schema_1 = require("../schemas/task.schema");
+var task_service_1 = require("../services/task.service");
+var adm_service_1 = require("../admin/adm.service");
+var taskService = new task_service_1.TaskServices();
+var admService = new adm_service_1.AdmServices();
+var TaskController = /** @class */ (function () {
+    function TaskController() {
     }
-    AuthService.prototype.authLogin = function (_a) {
-        return __awaiter(this, arguments, void 0, function (_b) {
-            var user, isMatch, token;
-            var email = _b.email, password = _b.password;
-            return __generator(this, function (_c) {
-                switch (_c.label) {
-                    case 0: return [4 /*yield*/, this.verifyEmail(email)];
-                    case 1:
-                        user = _c.sent();
-                        if (!user) {
-                            throw new Error("Usuário não encontrado.");
-                        }
-                        ;
-                        return [4 /*yield*/, (0, hashPassword_1.verifyPassword)(password, user.password)];
-                    case 2:
-                        isMatch = _c.sent();
-                        if (!isMatch) {
-                            throw new Error("Usuário não encontrado.");
-                        }
-                        ;
-                        token = this.genToken(user.id);
-                        return [2 /*return*/, token];
+    TaskController.prototype.createTask = function (req, res) {
+        return __awaiter(this, void 0, void 0, function () {
+            var taskData, userData;
+            return __generator(this, function (_a) {
+                try {
+                    taskData = task_schema_1.taskCreateSchema.parse(req.body);
+                    if (!req.user) {
+                        throw new Error("Usuário não encontrado	");
+                    }
+                    userData = req.user;
+                    taskService.createTaskService(taskData, userData);
+                    res.status(201).json({ message: "Tarefa criada com sucesso" });
+                    return [2 /*return*/];
                 }
+                catch (error) {
+                    res.status(500).json({ message: "Erro interno do servidor" });
+                    return [2 /*return*/];
+                }
+                return [2 /*return*/];
             });
         });
     };
     ;
-    AuthService.prototype.verifyEmail = function (email) {
+    TaskController.prototype.getAllTasks = function (req, res) {
         return __awaiter(this, void 0, void 0, function () {
+            var userId, tasks, error_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, prismaConfig_1.prisma.user.findUnique({
-                            where: {
-                                email: email
-                            }
-                        })];
-                    case 1: return [2 /*return*/, _a.sent()];
+                    case 0:
+                        _a.trys.push([0, 2, , 3]);
+                        userId = req.user;
+                        if (!userId) {
+                            throw new Error("Usuário não encontrado");
+                        }
+                        return [4 /*yield*/, taskService.findAllTasks(userId)];
+                    case 1:
+                        tasks = _a.sent();
+                        res.status(200).send(tasks);
+                        return [3 /*break*/, 3];
+                    case 2:
+                        error_1 = _a.sent();
+                        res.status(500).json({ error: "Erro ao buscar tasks" });
+                        return [3 /*break*/, 3];
+                    case 3:
+                        ;
+                        return [2 /*return*/];
                 }
             });
         });
     };
     ;
-    AuthService.prototype.genToken = function (id) {
-        return jsonwebtoken_1.default.sign({ id: id }, JWT_SECRET, { expiresIn: '1d' });
+    TaskController.prototype.getTaskById = function (req, res) {
+        return __awaiter(this, void 0, void 0, function () {
+            var id;
+            return __generator(this, function (_a) {
+                try {
+                    id = req.query.id;
+                    console.log("ID recebido: ".concat(id));
+                    res.status(200).send(id);
+                }
+                catch (error) {
+                    res.status(500).json({ error: "Erro ao buscar task" });
+                }
+                return [2 /*return*/];
+            });
+        });
     };
-    ;
-    return AuthService;
+    return TaskController;
 }());
-exports.AuthService = AuthService;
+exports.TaskController = TaskController;
+;

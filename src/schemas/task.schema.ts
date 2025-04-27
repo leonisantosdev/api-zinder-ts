@@ -1,7 +1,6 @@
 import { Priority, Status } from '@prisma/client';
 import { nativeEnum, z } from 'zod';
 
-
 export const TaskSchema = z.object({
   id: z.number(),
   title: z.string().min(1, "O título deve conter no mínimo 1 caracter"),
