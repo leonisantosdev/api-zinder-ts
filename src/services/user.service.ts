@@ -66,7 +66,9 @@ ${process.env.BASE_URL}/verify-email?token=${token}`
       }
     }, 60000);
 
-    await transporter.sendMail(mailOptions)
+    console.log(mailOptions);
+
+    await transporter.sendMail(mailOptions);
   }
 
   async findByToken (token: string) {
