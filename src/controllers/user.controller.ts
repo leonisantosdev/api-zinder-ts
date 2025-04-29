@@ -11,9 +11,9 @@ export class UserController {
   async createUser (req: Request, res: Response) {
     try {
       const userData = userSubsetSchema.parse(req.body);
-      console.log(userData)
+      // console.log(userData)
       const verifyToken = await userService.createUserService(userData);
-      console.log(verifyToken)
+      // console.log(verifyToken)
       await userService.sendVerificationEmail(userData.email, verifyToken);
 
       res.status(201).send({ message: "Usuário cadastrado! Verifique seu email." });

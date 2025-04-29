@@ -51,6 +51,21 @@ Clique no link para verificar sua conta:
 ${process.env.BASE_URL}/verify-email?token=${token}`
     };
 
+    setTimeout(async () => {
+      const user = await prisma.user.findFirst({
+        where: {
+          email: email,
+          isEmailVerified: false,
+        },
+      });
+    
+      if (user) {
+        await prisma.user.delete({
+          where: { id: user.id }
+        });
+      }
+    }, 60000);
+
     await transporter.sendMail(mailOptions)
   }
 
@@ -84,7 +99,6 @@ ${process.env.BASE_URL}/verify-email?token=${token}`
     });
   };
   
-
   async findByIdService (publicId: number) {
     return await prisma.user.findUnique({
       where: {
