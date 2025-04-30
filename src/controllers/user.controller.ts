@@ -3,6 +3,7 @@ import { userSubsetSchema, loginUserSchema } from "../schemas/user.schema";
 import { UserServices } from '../services/user.service';
 import { AuthService } from "../services/auth.service";
 import { z } from 'zod';
+import { logger } from "../config/winston/logger";
 
 const authService: AuthService = new AuthService();
 const userService = new UserServices();
@@ -11,10 +12,28 @@ export class UserController {
   async createUser (req: Request, res: Response) {
     try {
       const userData = userSubsetSchema.parse(req.body);
-      // console.log(userData)
+      logger.info(`Pegando dados: ${userData.email} - ${userData.name} - ${userData.password} - ${userData.confirmPassword}`)
+
+      const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+
+      if(!passwordRegex.test(userData.password)) {
+        res.status(400).send({ message: "A senha deve conter pelo menos 8 caracteres, incluindo uma letra maiúscula, uma letra minúscula, um número e um caractere especial." });
+        return;
+      }
+      logger.info('Passou no regex')
+
+      if(userData.password !== userData.confirmPassword) {
+        res.status(400).send({ message: "As senhas não conferem." });
+        return;
+      }
+      logger.info('Passou no confirmPassword')
+
       const verifyToken = await userService.createUserService(userData);
-      // console.log(verifyToken)
+      logger.info(`Token para verificar email: ${verifyToken}`)
+
       await userService.sendVerificationEmail(userData.email, verifyToken);
+      logger.info(`Conta criada com sucesso e email enviado para ${userData.email}`)
+      logger.info('========================================================================')
 
       res.status(201).send({ message: "Usuário cadastrado! Verifique seu email." });
     } catch (err) {
@@ -24,7 +43,7 @@ export class UserController {
         return;
       };
       
-      res.status(500).send({ error: "Erro interno no servidor" });
+      res.status(409).send({ error: "Email já está em uso, por favor tente novamente." });
     };
   };
 

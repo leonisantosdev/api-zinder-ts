@@ -8,7 +8,8 @@ export const UserSchema = z.object({
   username: z.string().min(5, "O nome de usuário deve ter no mínimo 5 caracteres"),
   name: z.string().min(3, {message: 'O nome deve ter no mínimo 3 caracteres'}).transform(transformName),
   email: z.string().email({message: 'O email deve ter o formato padrão example@gmail.com'}),
-  password: z.string().min(6, {message: 'A senha deve ter no mínimo 6 caracteres'}),
+  password: z.string().min(8, {message: 'A senha deve ter no mínimo 8 caracteres'}),
+  confirmPassword: z.string().min(8, {message: 'As senhas não conferem'}),
   profilePictureUrl: z.string().url().optional().nullable(),
   birthDate: z.coerce.date().optional().nullable(),
   gender: nativeEnum(Gender).optional().nullable(),
@@ -25,6 +26,7 @@ export const userSubsetSchema = UserSchema.pick({
   name: true,
   email: true,
   password: true,
+  confirmPassword: true,
 });
 
 export type UserSubset = z.infer<typeof userSubsetSchema>;

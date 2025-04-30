@@ -4,6 +4,9 @@ import { UserSubset } from '../schemas/user.schema';
 import { number } from '../utils/randomNumber';
 import nodemailer from 'nodemailer';
 import { v4 as uuidv4 } from 'uuid';
+import { msgEmailValidation } from '../utils/msgEmailValidation';
+import { logger } from '../config/winston/logger';
+import { error } from 'console';
 
 export class UserServices {
   async createUserService ({ name, email, password }: UserSubset) {
@@ -15,7 +18,8 @@ export class UserServices {
     .replace(/[\u0300-\u036f]/g, '') 
     .replace(/\s+/g, '.')
     .toLowerCase() + number;''
-    
+    logger.info(`Criando username: ${username}`)
+
     await prisma.user.create({
       data: {
         username,
@@ -28,45 +32,48 @@ export class UserServices {
         verifyToken: emailVerifyToken
       }
       });
+      logger.info("Conta criada com sucesso!")
 
       return emailVerifyToken
   };
 
   async sendVerificationEmail (email: string, token: string) {
     const transporter = nodemailer.createTransport({
-      service: `${process.env.SERVICE}`,
+      service: `${process.env.SERVICE_GMAIL}`,
       auth: {
         user: `${process.env.EMAIL_USER}`,
         pass: `${process.env.EMAIL_PASSWORD}`
       }
-    })
+    });
+
+    logger.info(`Transporter: ${transporter}`);
 
     const mailOptions = {
       from: `${process.env.EMAIL_USER}`,
       to: email, 
       subject: `Verificação de E-mail`,
-      text: `
-Clique no link para verificar sua conta:
-
-${process.env.BASE_URL}/verify-email?token=${token}`
+      text: msgEmailValidation(token)
     };
 
-    setTimeout(async () => {
-      const user = await prisma.user.findFirst({
-        where: {
-          email: email,
-          isEmailVerified: false,
-        },
-      });
-    
-      if (user) {
-        await prisma.user.delete({
-          where: { id: user.id }
-        });
-      }
-    }, 60000);
+    logger.info(`Transporter: ${mailOptions}`);
 
-    console.log(mailOptions);
+
+    // setTimeout(async () => {
+    //   const user = await prisma.user.findFirst({
+    //     where: {
+    //       email: email,
+    //       isEmailVerified: false,
+    //     },
+    //   });
+    
+    //   if (user) {
+    //     await prisma.user.delete({
+    //       where: { id: user.id }
+    //     });
+    //   }
+    // }, 60000);
+
+    // console.log(mailOptions);
 
     await transporter.sendMail(mailOptions);
   }
