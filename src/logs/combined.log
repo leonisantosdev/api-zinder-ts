@@ -116,3 +116,160 @@
 2025-04-30 08:21:33 info: Transporter: [object Object]
 2025-04-30 08:21:36 info: Conta criada com sucesso e email enviado para leonisantos2@gmail.com
 2025-04-30 08:21:36 info: ========================================================================
+2025-04-30 15:48:49 info: Pegando dados: teste123@gmail.com - Fulaninho Da Silva - @L1e2o3n4i5 - @L1e2o3n4i5
+2025-04-30 15:48:49 info: Passou no regex
+2025-04-30 15:48:49 info: Passou no confirmPassword
+2025-04-30 15:48:49 info: Criando username: fulaninho.da.silva4520
+2025-04-30 15:48:49 info: Conta criada com sucesso!
+2025-04-30 15:48:49 info: Token para verificar email: 3946b831-fd14-448a-9c7d-d0edffbaeed0
+2025-04-30 15:48:49 info: Transporter: [object Object]
+2025-04-30 15:48:49 info: Transporter: [object Object]
+2025-04-30 15:48:50 info: Pegando dados: teste123@gmail.com - Fulaninho Da Silva - @L1e2o3n4i5 - @L1e2o3n4i5
+2025-04-30 15:48:50 info: Passou no regex
+2025-04-30 15:48:50 info: Passou no confirmPassword
+2025-04-30 15:48:50 info: Criando username: fulaninho.da.silva5488
+2025-04-30 15:48:55 info: Pegando dados: teste12345@gmail.com - Fulaninho Da Silva - @L1e2o3n4i5 - @L1e2o3n4i5
+2025-04-30 15:48:55 info: Passou no regex
+2025-04-30 15:48:55 info: Passou no confirmPassword
+2025-04-30 15:48:55 info: Criando username: fulaninho.da.silva5488
+2025-04-30 15:48:55 info: Conta criada com sucesso!
+2025-04-30 15:48:55 info: Token para verificar email: 8f5e132d-1aa6-4ba5-be0b-ca642b3dd64b
+2025-04-30 15:48:55 info: Transporter: [object Object]
+2025-04-30 15:48:55 info: Transporter: [object Object]
+2025-04-30 15:48:58 info: Conta criada com sucesso e email enviado para teste12345@gmail.com
+2025-04-30 15:48:58 info: ========================================================================
+2025-04-30 19:03:22 info: Pegando dados: leonisantosf@gmail.com - Leoni Santos - @L1e2o3n4i5 - @L1e2o3n4i5
+2025-04-30 19:03:22 info: Passou no regex
+2025-04-30 19:03:22 info: Passou no confirmPassword
+2025-04-30 19:03:22 info: Criando username: leoni.santos5488
+2025-04-30 19:03:22 info: Conta criada com sucesso!
+2025-04-30 19:03:22 info: Token para verificar email: 7d4015c6-304f-4b38-9073-fa1b3aba3241
+2025-04-30 19:03:22 info: Transporter: [object Object]
+2025-04-30 19:03:22 info: Transporter: [object Object]
+2025-04-30 19:03:25 info: Conta criada com sucesso e email enviado para leonisantosf@gmail.com
+2025-04-30 19:03:25 info: ========================================================================
+2025-04-30 19:03:46 info: Pegando dados: leonisantosf@gmail.com - Leoni - @L1e2o3n4i5 - @L1e2o3n4i5
+2025-04-30 19:03:46 info: Passou no regex
+2025-04-30 19:03:46 info: Passou no confirmPassword
+2025-04-30 19:03:46 info: Criando username: leoni5488
+2025-04-30 19:05:05 info: Pegando dados: leonisan391298398@gmail.com - Leoni - l1e2o3n4i5 - l1e2o3n4i5
+2025-04-30 19:05:08 info: Pegando dados: leonisan391298398@gmail.com - Leoni - l1e2o3n4i5 - l1e2o3n4i5
+2025-04-30 19:05:10 info: Pegando dados: leonisan391298398@gmail.com - Leoni - l1e2o3n4i5 - l1e2o3n4i5
+2025-04-30 19:05:11 info: Pegando dados: leonisan391298398@gmail.com - Leoni - l1e2o3n4i5 - l1e2o3n4i5
+2025-04-30 19:05:11 info: Pegando dados: leonisan391298398@gmail.com - Leoni - l1e2o3n4i5 - l1e2o3n4i5
+2025-04-30 19:05:11 info: Pegando dados: leonisan391298398@gmail.com - Leoni - l1e2o3n4i5 - l1e2o3n4i5
+2025-04-30 19:05:11 info: Pegando dados: leonisan391298398@gmail.com - Leoni - l1e2o3n4i5 - l1e2o3n4i5
+2025-04-30 19:05:11 info: Pegando dados: leonisan391298398@gmail.com - Leoni - l1e2o3n4i5 - l1e2o3n4i5
+2025-04-30 20:05:06 info: Pegando dados: leonisantosf@gmail.com - Lele Silva - @L1e2o3n4i5 - @L1e2o3n4i5
+2025-04-30 20:05:06 info: Passou no regex
+2025-04-30 20:05:06 info: Passou no confirmPassword
+2025-04-30 20:05:07 info: Criando username: lele.silva5198
+2025-04-30 20:05:07 info: Conta criada com sucesso!
+2025-04-30 20:05:07 info: Token para verificar email: 7b7ff52b-24be-42c2-95fd-57f0743c8916
+2025-04-30 20:05:07 info: Transporter: [object Object]
+2025-04-30 20:05:07 info: Transporter: [object Object]
+2025-04-30 20:05:10 info: Conta criada com sucesso e email enviado para leonisantosf@gmail.com
+2025-04-30 20:05:10 info: ========================================================================
+2025-05-01 09:44:51 info: Pegando dados: adm@gmail.com - Adm - @L1e2o3n4i5 - @L1e2o3n4i5
+2025-05-01 09:44:51 info: Passou no regex
+2025-05-01 09:44:51 info: Passou no confirmPassword
+2025-05-01 09:44:51 info: Criando username: adm9464
+2025-05-01 09:44:52 info: Pegando dados: adm@gmail.com - Adm - @L1e2o3n4i5 - @L1e2o3n4i5
+2025-05-01 09:44:52 info: Passou no regex
+2025-05-01 09:44:52 info: Passou no confirmPassword
+2025-05-01 09:44:52 info: Criando username: adm3990
+2025-05-01 09:44:52 info: Conta criada com sucesso!
+2025-05-01 09:44:52 info: Token para verificar email: 65f825a5-2ce4-49a3-8043-507ad5b59c93
+2025-05-01 09:44:52 info: Transporter: [object Object]
+2025-05-01 09:44:52 info: Transporter: [object Object]
+2025-05-01 09:44:55 info: Conta criada com sucesso e email enviado para adm@gmail.com
+2025-05-01 09:44:55 info: ========================================================================
+2025-05-01 09:58:53 info: Pegando dados: leonisantosf@gmail.com - Leôni Santos Fernandes - @L1e2o3n4i5 - @L1e2o3n4i5
+2025-05-01 09:58:53 info: Passou no regex
+2025-05-01 09:58:53 info: Passou no confirmPassword
+2025-05-01 09:58:53 info: Criando username: leoni.santos.fernandes3990
+2025-05-01 09:58:53 info: Conta criada com sucesso!
+2025-05-01 09:58:53 info: Token para verificar email: a788b3e2-1b64-4dbc-8183-94949479cc05
+2025-05-01 09:58:53 info: Transporter: [object Object]
+2025-05-01 09:58:53 info: Transporter: [object Object]
+2025-05-01 09:58:56 info: Conta criada com sucesso e email enviado para leonisantosf@gmail.com
+2025-05-01 09:58:56 info: ========================================================================
+2025-05-01 10:03:41 info: Pegando dados: leonisantosf@gmail.com - Leôni Santos Fernandes - @L1e2o3n4i5 - @L1e2o3n4i5
+2025-05-01 10:03:41 info: Passou no regex
+2025-05-01 10:03:41 info: Passou no confirmPassword
+2025-05-01 10:03:41 info: Criando username: leoni.santos.fernandes3990
+2025-05-01 10:03:41 info: Conta criada com sucesso!
+2025-05-01 10:03:41 info: Token para verificar email: 4101406a-a1c9-4945-80de-9ea107582213
+2025-05-01 10:03:41 info: Transporter: [object Object]
+2025-05-01 10:03:41 info: Transporter: [object Object]
+2025-05-01 10:03:44 info: Conta criada com sucesso e email enviado para leonisantosf@gmail.com
+2025-05-01 10:03:44 info: ========================================================================
+2025-05-01 10:04:37 info: Pegando dados: leonisantosf@gmail.com - Leôni Santos - @L1e2o3n4i5 - @L1e2o3n4i5
+2025-05-01 10:04:37 info: Passou no regex
+2025-05-01 10:04:37 info: Passou no confirmPassword
+2025-05-01 10:04:37 info: Criando username: leoni.santos3990
+2025-05-01 10:04:37 info: Conta criada com sucesso!
+2025-05-01 10:04:37 info: Token para verificar email: 22767312-8923-47cf-9d99-d3ce7521f702
+2025-05-01 10:04:37 info: Transporter: [object Object]
+2025-05-01 10:04:37 info: Transporter: [object Object]
+2025-05-01 10:04:41 info: Conta criada com sucesso e email enviado para leonisantosf@gmail.com
+2025-05-01 10:04:41 info: ========================================================================
+2025-05-01 10:14:30 info: Pegando dados: teste123@gmail.com - Fulano 1 - Lele@123 - Lele@123
+2025-05-01 10:14:30 info: Passou no regex
+2025-05-01 10:14:30 info: Passou no confirmPassword
+2025-05-01 10:14:30 info: Criando username: fulano.14713
+2025-05-01 10:14:30 info: Conta criada com sucesso!
+2025-05-01 10:14:30 info: Token para verificar email: 14a00eb2-0e2d-4624-af6f-b29889cb2a63
+2025-05-01 10:14:30 info: Transporter: [object Object]
+2025-05-01 10:14:30 info: Transporter: [object Object]
+2025-05-01 10:14:33 info: Conta criada com sucesso e email enviado para teste123@gmail.com
+2025-05-01 10:14:33 info: ========================================================================
+2025-05-01 10:54:38 info: Pegando dados: 2938@a.com - Fulano 2 - @L1e2o3n4i5 - @L1e2o3n4i5
+2025-05-01 10:54:38 info: Passou no regex
+2025-05-01 10:54:38 info: Passou no confirmPassword
+2025-05-01 10:54:38 info: Criando username: fulano.28546
+2025-05-01 10:54:38 info: Conta criada com sucesso!
+2025-05-01 10:54:38 info: Token para verificar email: 761759cb-aa25-4b82-b74b-eafe163a397d
+2025-05-01 10:54:38 info: Transporter: [object Object]
+2025-05-01 10:54:38 info: Transporter: [object Object]
+2025-05-01 10:54:41 info: Conta criada com sucesso e email enviado para 2938@a.com
+2025-05-01 10:54:41 info: ========================================================================
+2025-05-01 12:44:43 info: Criando username: fulano.1541437
+2025-05-01 12:44:43 info: Conta criada com sucesso!
+2025-05-01 12:44:43 info: Token para verificar email: d05a6c00-64c2-48bd-9ee7-96347691a84a
+2025-05-01 12:44:43 info: Transporter: [object Object]
+2025-05-01 12:44:43 info: Transporter: [object Object]
+2025-05-01 12:44:47 info: Conta criada com sucesso e email enviado para teste2312321@gmail.com
+2025-05-01 12:44:47 info: ========================================================================
+2025-05-01 13:21:22 info: Criando username: fulano.13751
+2025-05-01 13:21:22 info: Conta criada com sucesso!
+2025-05-01 13:21:22 info: Token para verificar email: fd0b754c-f4fc-4edc-8044-238a60915128
+2025-05-01 13:21:22 info: Transporter: [object Object]
+2025-05-01 13:21:22 info: Transporter: [object Object]
+2025-05-01 13:21:25 info: Conta criada com sucesso e email enviado para teste225@gmail.com
+2025-05-01 13:21:25 info: ========================================================================
+2025-05-01 13:25:48 info: Criando username: fulano.251920
+2025-05-01 13:25:48 info: Conta criada com sucesso!
+2025-05-01 13:25:49 info: Transporter: [object Object]
+2025-05-01 13:25:49 info: Transporter: [object Object]
+2025-05-01 13:28:25 info: Criando username: hannah.martinez1920
+2025-05-01 13:28:25 info: Conta criada com sucesso!
+2025-05-01 13:28:25 info: Transporter: [object Object]
+2025-05-01 13:28:25 info: Transporter: [object Object]
+2025-05-01 16:01:13 info: Criando username: fulano.254453
+2025-05-01 16:01:13 info: Conta criada com sucesso!
+2025-05-01 16:01:13 info: Transporter: [object Object]
+2025-05-01 16:01:13 info: Transporter: [object Object]
+2025-05-01 16:01:14 info: Criando username: fulano.254118
+2025-05-01 16:02:24 info: Criando username: fulano.254118
+2025-05-01 16:02:24 info: Conta criada com sucesso!
+2025-05-01 16:02:24 info: Transporter: [object Object]
+2025-05-01 16:02:24 info: Transporter: [object Object]
+2025-05-01 16:06:22 info: Criando username: leoni.santos4118
+2025-05-01 16:06:22 info: Conta criada com sucesso!
+2025-05-01 16:06:22 info: Transporter: [object Object]
+2025-05-01 16:06:22 info: Transporter: [object Object]
+2025-05-01 16:07:30 info: Criando username: leoni.santos.24118
+2025-05-01 16:07:30 info: Conta criada com sucesso!
+2025-05-01 16:07:30 info: Transporter: [object Object]
+2025-05-01 16:07:30 info: Transporter: [object Object]

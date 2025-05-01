@@ -6,7 +6,6 @@ import nodemailer from 'nodemailer';
 import { v4 as uuidv4 } from 'uuid';
 import { msgEmailValidation } from '../utils/msgEmailValidation';
 import { logger } from '../config/winston/logger';
-import { error } from 'console';
 
 export class UserServices {
   async createUserService ({ name, email, password }: UserSubset) {
@@ -56,24 +55,6 @@ export class UserServices {
     };
 
     logger.info(`Transporter: ${mailOptions}`);
-
-
-    // setTimeout(async () => {
-    //   const user = await prisma.user.findFirst({
-    //     where: {
-    //       email: email,
-    //       isEmailVerified: false,
-    //     },
-    //   });
-    
-    //   if (user) {
-    //     await prisma.user.delete({
-    //       where: { id: user.id }
-    //     });
-    //   }
-    // }, 60000);
-
-    // console.log(mailOptions);
 
     await transporter.sendMail(mailOptions);
   }

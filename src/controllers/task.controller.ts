@@ -48,7 +48,6 @@ export class TaskController {
   async getTaskById (req: Request, res: Response) {
     try {
       const { id } = req.query;
-      console.log(`ID recebido: ${id}`);
 
       res.status(200).send(id);
     } catch (error) {

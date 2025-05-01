@@ -33,7 +33,7 @@ export type UserSubset = z.infer<typeof userSubsetSchema>;
 
 export const loginUserSchema = z.object({
   email: z.string().email('Email inválido'),
-  password: z.string().min(6, 'Senha inválida'),
+  password: z.string().min(8, 'Senha inválida'),
 });
 
 export type loginUser = z.infer<typeof loginUserSchema>;
