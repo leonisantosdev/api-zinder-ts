@@ -1,10 +1,9 @@
-import { Request, Response } from "express";
-import { userSubsetSchema, loginUserSchema } from "../schemas/user.schema";
-import { UserServices } from '../services/user.service';
-import { AuthService } from "../services/auth.service";
+import type { Request, Response } from 'express';
+import { userSubsetSchema, loginUserSchema } from "../schemas/user.schema.js";
+import { UserServices } from "../services/user.service.js";
+import { AuthService } from "../services/auth.service.js";
 import { z } from 'zod';
-import { logger } from "../config/winston/logger";
-import { passwordRegexValidation } from "../utils/regexPassword";
+import { passwordRegexValidation } from "../utils/regexPassword.js";
 
 const authService: AuthService = new AuthService();
 const userService = new UserServices();
@@ -46,7 +45,7 @@ export class UserController {
   
       await userService.userUpdateByToken(user.id);
   
-      res.status(200).send({ message: "E-mail verificado com sucesso! Agora você pode fazer login." });
+      res.redirect('http://localhost:5173/verify-email');
     } catch(error) {
 
     }
@@ -119,7 +118,7 @@ export class UserController {
 
       await userService.sendEmailToChangePassword(email);
 
-      res.status(201).send({ message: "Verifique seu e-mail para redefiner sua senha." });
+      res.status(200).send({ message: "Verifique seu e-mail para redefinir sua senha!" });
     } catch (err) {
       const message = (err as Error).message || "Erro interno do servidor.";
       

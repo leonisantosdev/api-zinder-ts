@@ -1,8 +1,8 @@
-import { prisma } from '../config/prisma/prismaConfig';
+import { prisma } from '../config/prisma/prismaConfig.js';
 import jwt from 'jsonwebtoken';
 import { assert, error } from "console";
-import { loginUser } from '../schemas/user.schema';
-import { verifyPassword } from '../utils/hashPassword';
+import type { loginUser } from '../schemas/user.schema.js';
+import { verifyPassword } from '../utils/hashPassword.js';
 
 const JWT_SECRET = process.env.JWT_SECRET!;
 assert(JWT_SECRET);

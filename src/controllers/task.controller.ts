@@ -1,8 +1,8 @@
-import { taskCreateSchema } from "../schemas/task.schema";
-import { Request, Response } from "express";
-import { TaskServices } from "../services/task.service";
-import { User } from "@prisma/client";
-import { AdmServices } from "../admin/adm.service";
+import { taskCreateSchema } from "../schemas/task.schema.js";
+import type { Request, Response } from "express";
+import { TaskServices } from "../services/task.service.js";
+import type { User } from "@prisma/client";
+import { AdmServices } from "../admin/adm.service.js";
 
 const taskService = new TaskServices();
 const admService = new AdmServices();

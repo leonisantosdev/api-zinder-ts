@@ -1,5 +1,5 @@
 import { nativeEnum, z } from 'zod';
-import { transformName } from '../utils/transformName';
+import { transformName } from '../utils/transformName.js';
 import { Gender, Role } from '@prisma/client';
 
 export const UserSchema = z.object({

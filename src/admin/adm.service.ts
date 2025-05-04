@@ -1,5 +1,5 @@
-import { UserSubsetTask } from '../schemas/user.schema'
-import { prisma } from '../config/prisma/prismaConfig'
+import type { UserSubsetTask } from '../schemas/user.schema.js';
+import { prisma } from '../config/prisma/prismaConfig.js';
 
 export class AdmServices {
   async findRole(userId: UserSubsetTask['id']) {

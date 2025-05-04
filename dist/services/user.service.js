@@ -1,146 +1,144 @@
-"use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-var __generator = (this && this.__generator) || function (thisArg, body) {
-    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g = Object.create((typeof Iterator === "function" ? Iterator : Object).prototype);
-    return g.next = verb(0), g["throw"] = verb(1), g["return"] = verb(2), typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
-    function verb(n) { return function (v) { return step([n, v]); }; }
-    function step(op) {
-        if (f) throw new TypeError("Generator is already executing.");
-        while (g && (g = 0, op[0] && (_ = 0)), _) try {
-            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
-            if (y = 0, t) op = [op[0] & 2, t.value];
-            switch (op[0]) {
-                case 0: case 1: t = op; break;
-                case 4: _.label++; return { value: op[1], done: false };
-                case 5: _.label++; y = op[1]; op = [0]; continue;
-                case 7: op = _.ops.pop(); _.trys.pop(); continue;
-                default:
-                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
-                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
-                    if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
-                    if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
-                    if (t[2]) _.ops.pop();
-                    _.trys.pop(); continue;
+import { prisma } from '../config/prisma/prismaConfig.js';
+import { hashPassword } from '../utils/hashPassword.js';
+import { number } from '../utils/randomNumber.js';
+import { v4 as uuidv4 } from 'uuid';
+import { msgUserEmail } from '../utils/msgEmailValidation.js';
+import { getTransporter } from '../utils/sendEmailUser.js';
+import { addMinutes } from 'date-fns';
+export class UserServices {
+    async createUserService({ name, email, password }) {
+        const hashedPassword = await hashPassword(password);
+        const emailVerifyToken = uuidv4();
+        const username = name
+            .normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '')
+            .replace(/\s+/g, '.')
+            .toLowerCase() + number;
+        '';
+        const userExists = await this.findUserByEmail(email);
+        if (userExists) {
+            throw new Error("E-mail já cadastrado. Tente novamente com outro e-mail.");
+        }
+        await prisma.user.create({
+            data: {
+                username,
+                name,
+                email,
+                password: hashedPassword,
+                role: 'user',
+                isActive: true,
+                isEmailVerified: false,
+                verifyToken: emailVerifyToken
             }
-            op = body.call(thisArg, _);
-        } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
-        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
+        });
+        return emailVerifyToken;
     }
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.UserServices = void 0;
-var prismaConfig_1 = require("../config/prisma/prismaConfig");
-var hashPassword_1 = require("../utils/hashPassword");
-var randomNumber_1 = require("../utils/randomNumber");
-var UserServices = /** @class */ (function () {
-    function UserServices() {
+    
+    async sendVerificationEmail(email, token) {
+        const transporter = getTransporter();
+        const mailOptions = {
+            from: `${process.env.EMAIL_USER}`,
+            to: email,
+            subject: `Verificação de E-mail`,
+            text: msgUserEmail({ route: '/verify-email', token: token, msg: 'Para verificar seu e-mail, clique no link abaixo:' }),
+        };
+        
+        await transporter.sendMail(mailOptions);
     }
-    UserServices.prototype.createUserService = function (_a) {
-        return __awaiter(this, arguments, void 0, function (_b) {
-            var hashedPassword, username;
-            var name = _b.name, email = _b.email, password = _b.password;
-            return __generator(this, function (_c) {
-                switch (_c.label) {
-                    case 0: return [4 /*yield*/, (0, hashPassword_1.hashPassword)(password)];
-                    case 1:
-                        hashedPassword = _c.sent();
-                        username = name
-                            .normalize('NFD')
-                            .replace(/[\u0300-\u036f]/g, '')
-                            .replace(/\s+/g, '.')
-                            .toLowerCase() + randomNumber_1.number;
-                        '';
-                        return [4 /*yield*/, prismaConfig_1.prisma.user.create({
-                                data: {
-                                    username: username,
-                                    name: name,
-                                    email: email,
-                                    password: hashedPassword,
-                                    role: 'user',
-                                    isActive: true,
-                                }
-                            })];
-                    case 2:
-                        _c.sent();
-                        return [2 /*return*/];
-                }
-            });
+    
+    async findByToken(token) {
+        const user = await prisma.user.findFirst({
+            where: {
+                verifyToken: token
+            }
         });
-    };
-    ;
-    UserServices.prototype.findAllUsers = function () {
-        return __awaiter(this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, prismaConfig_1.prisma.user.findMany({
-                            select: {
-                                username: true,
-                                name: true,
-                                email: true,
-                            }
-                        })];
-                    case 1: return [2 /*return*/, _a.sent()];
-                }
-            });
+        return user;
+    }
+    
+    async userUpdateByToken(userId) {
+        await prisma.user.update({
+            where: { id: userId },
+            data: {
+                isEmailVerified: true,
+                verifyToken: null,
+            },
         });
-    };
-    ;
-    UserServices.prototype.findByIdService = function (publicId) {
-        return __awaiter(this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, prismaConfig_1.prisma.user.findUnique({
-                            where: {
-                                publicId: publicId
-                            },
-                            select: {
-                                publicId: true,
-                                name: true,
-                                email: true,
-                            }
-                        })];
-                    case 1: return [2 /*return*/, _a.sent()];
-                }
-            });
+    }
+    
+    async findAllUsers() {
+        return await prisma.user.findMany({
+            select: {
+                username: true,
+                name: true,
+                email: true,
+            }
         });
-    };
-    ;
-    UserServices.prototype.updateUserById = function (publicId_1, _a) {
-        return __awaiter(this, arguments, void 0, function (publicId, _b) {
-            var hashedPassword;
-            var name = _b.name, email = _b.email, password = _b.password;
-            return __generator(this, function (_c) {
-                switch (_c.label) {
-                    case 0: return [4 /*yield*/, (0, hashPassword_1.hashPassword)(password)];
-                    case 1:
-                        hashedPassword = _c.sent();
-                        return [4 /*yield*/, prismaConfig_1.prisma.user.update({
-                                where: {
-                                    publicId: publicId
-                                },
-                                data: {
-                                    name: name,
-                                    email: email,
-                                    password: hashedPassword
-                                },
-                            })];
-                    case 2:
-                        _c.sent();
-                        return [2 /*return*/];
-                }
-            });
+    }
+    
+    async findByIdService(publicId) {
+        return await prisma.user.findUnique({
+            where: {
+                publicId
+            },
+            select: {
+                publicId: true,
+                name: true,
+                email: true,
+            }
         });
-    };
-    ;
-    return UserServices;
-}());
-exports.UserServices = UserServices;
+    }
+    
+    async updateUserById(publicId, { name, email, password }) {
+        const hashedPassword = await hashPassword(password);
+        await prisma.user.update({
+            where: {
+                publicId
+            },
+            data: {
+                name,
+                email,
+                password: hashedPassword
+            },
+        });
+    }
+    
+    async sendEmailToChangePassword(email) {
+        const user = await prisma.user.findUnique({
+            where: {
+                email
+            }
+        });
+        console.log(user);
+        if (!user) {
+            throw new Error("Nenhum usuário encontrado com esse e-mail. Tente novamente.");
+        }
+        ;
+        const token = uuidv4();
+        const expiresAt = addMinutes(new Date(), 15);
+        await prisma.passwordResetToken.create({
+            data: {
+                token,
+                userId: user.id,
+                expiresAt,
+            }
+        });
+        const transporter = getTransporter();
+        const mailOptions = {
+            from: `${process.env.EMAIL_USER}`,
+            to: email,
+            subject: `Recuperação de Senha`,
+            text: msgUserEmail({ route: '/change-password', token: token, msg: 'Para redefinir sua senha, clique no link abaixo:' })
+        };
+        await transporter.sendMail(mailOptions);
+    }
+    
+    async findUserByEmail(email) {
+        const user = await prisma.user.findUnique({
+            where: {
+                email
+            }
+        });
+        return user;
+    }
+}
 ;

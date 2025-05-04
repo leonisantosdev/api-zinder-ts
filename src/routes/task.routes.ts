@@ -1,6 +1,6 @@
 import express from 'express';
-import { TaskController } from '../controllers/task.controller';
-import { validToken } from '../middlewares/auth.middleware';
+import { TaskController } from '../controllers/task.controller.js';
+import { validToken } from '../middlewares/auth.middleware.js';
 
 const route = express.Router();
 const taskController = new TaskController();

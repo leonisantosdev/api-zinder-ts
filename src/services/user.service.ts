@@ -1,12 +1,10 @@
-import { prisma } from '../config/prisma/prismaConfig';
-import { hashPassword } from '../utils/hashPassword';
-import { UserSubset } from '../schemas/user.schema';
-import { number } from '../utils/randomNumber';
-import nodemailer from 'nodemailer';
+import { prisma } from '../config/prisma/prismaConfig.js';
+import { hashPassword } from '../utils/hashPassword.js';
+import type { UserSubset } from '../schemas/user.schema.js';
+import { number } from '../utils/randomNumber.js';
 import { v4 as uuidv4 } from 'uuid';
-import { msgUserEmail } from '../utils/msgEmailValidation';
-import { logger } from '../config/winston/logger';
-import { getTransporter } from '../utils/sendEmailUser';
+// import { msgUserEmail } from '../utils/msgEmailValidation.js';
+import { getTransporter } from '../utils/sendEmailUser.js';
 import { addMinutes } from 'date-fns';
 
 export class UserServices {
@@ -19,6 +17,12 @@ export class UserServices {
     .replace(/[\u0300-\u036f]/g, '') 
     .replace(/\s+/g, '.')
     .toLowerCase() + number;''
+
+    const userExists = await this.findUserByEmail(email);
+
+    if(userExists) {
+      throw new Error("E-mail já cadastrado. Tente novamente com outro e-mail.");
+    }
 
     await prisma.user.create({
       data: {
@@ -38,12 +42,42 @@ export class UserServices {
 
   async sendVerificationEmail (email: string, token: string) {
     const transporter = getTransporter();
+    const url = `http://localhost:3333/user/verify-email?token=${token}`;
 
     const mailOptions = {
       from: `${process.env.EMAIL_USER}`,
       to: email, 
       subject: `Verificação de E-mail`,
-      text: msgUserEmail({route: '/verify-email', token: token, msg: 'Para verificar seu e-mail, clique no link abaixo:'}),};
+      html: `
+      <div style="font-family: Arial, sans-serif; text-align: center; max-width: 600px; margin: 0 auto; padding: 20px; background-color:rgb(241, 241, 241); border-radius: 8px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);">
+        <h2 style="color: #333; font-size: 24px; margin-bottom: 20px;">Bem-vindo(a) à Zinder!</h2>
+        <p style="color: #555; font-size: 16px; line-height: 1.5; margin-bottom: 20px;">
+          Para verificar seu e-mail, clique no botão abaixo. 
+          O processo é rápido e garante a segurança da sua conta.
+        </p>
+        <a href="${url}" target="_blank" style="
+          display: inline-block;
+          padding: 14px 30px;
+          background-color: #4f46e5;
+          color: white;
+          border-radius: 8px;
+          text-decoration: none;
+          font-weight: bold;
+          font-size: 16px;
+          margin-top: 20px;
+          transition: background-color 0.3s ease;
+        ">
+          Verificar E-mail
+        </a>
+        <p style="color: #777; font-size: 14px; margin-top: 24px;">
+          Se você não criou uma conta, pode ignorar este e-mail.
+        </p>
+      </div>
+      <footer style="font-family: Arial, sans-serif; text-align: center; font-size: 12px; color: #999; margin-top: 40px;">
+        <p>© ${new Date().getFullYear()} Zinder. Todos os direitos reservados.</p>
+      </footer>
+    `
+};
 
     await transporter.sendMail(mailOptions);
   };
@@ -113,8 +147,6 @@ export class UserServices {
       }
     });
 
-    console.log(user)
-
     if (!user) {
       throw new Error("Nenhum usuário encontrado com esse e-mail. Tente novamente.");
     };
@@ -131,14 +163,53 @@ export class UserServices {
     })
 
     const transporter = getTransporter();
+    const url = `http://localhost:5173/change-password?token=${token}`;
 
     const mailOptions = {
       from: `${process.env.EMAIL_USER}`,
       to: email, 
-      subject: `Recuperação de Senha`,
-      text: msgUserEmail({route: '/change-password', token: token, msg: 'Para redefinir sua senha, clique no link abaixo:'})
-      };
+      subject: `Redefinição de Senha`,
+      html: `
+      <div style="font-family: Arial, sans-serif; text-align: center; max-width: 600px; margin: 0 auto; padding: 20px; background-color: rgb(241, 241, 241); border-radius: 8px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);">
+        <h2 style="color: #333; font-size: 24px; margin-bottom: 20px;">Bem-vindo(a) à Zinder!</h2>
+        <p style="color: #555; font-size: 16px; line-height: 1.5; margin-bottom: 20px;">
+          Para redefinir sua senha, clique no botão abaixo. 
+          O processo é rápido e garante a segurança da sua conta.
+        </p>
+        <a href="${url}" target="_blank" style="
+          display: inline-block;
+          padding: 14px 30px;
+          background-color: #4f46e5;
+          color: white;
+          border-radius: 8px;
+          text-decoration: none;
+          font-weight: bold;
+          font-size: 16px;
+          margin-top: 20px;
+          transition: background-color 0.3s ease;
+        ">
+          Redefinir Senha
+        </a>
+        <p style="color: #777; font-size: 14px; margin-top: 24px;">
+          Se você não solicitou uma redefinição de senha, pode ignorar este e-mail.
+        </p>
+      </div>
+      <footer style="font-family: Arial, sans-serif; text-align: center; font-size: 12px; color: #999; margin-top: 40px;">
+        <p>© ${new Date().getFullYear()} Zinder. Todos os direitos reservados.</p>
+      </footer>
+    `
+  };
 
     await transporter.sendMail(mailOptions);
   };
+
+  async findUserByEmail (email: string) {
+    const user = await prisma.user.findUnique({
+      where: {
+        email
+      }
+    });
+
+    return user;
+  }
 };

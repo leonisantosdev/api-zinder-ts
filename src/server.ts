@@ -1,7 +1,8 @@
-import express, { Application, Request, Response } from 'express';
+import type { Application } from 'express';
+import express from 'express';
 import cors from 'cors';
-import userRoutes from './routes/user.routes';
-import taskRoute from './routes/task.routes';
+import userRoutes from './routes/user.routes.js';
+import taskRoute from './routes/task.routes.js';
 
 const app: Application = express();
 app.use(cors({

@@ -1,36 +1,36 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.userSubsetTaskSchema = exports.loginUserSchema = exports.userSubsetSchema = exports.UserSchema = void 0;
-var zod_1 = require("zod");
-var transformName_1 = require("../utils/transformName");
-var client_1 = require("@prisma/client");
-exports.UserSchema = zod_1.z.object({
-    id: zod_1.z.string().uuid(),
-    publicId: zod_1.z.number().int().nonnegative(),
-    username: zod_1.z.string().min(5, "O nome de usuário deve ter no mínimo 5 caracteres"),
-    name: zod_1.z.string().min(3, { message: 'O nome deve ter no mínimo 3 caracteres' }).transform(transformName_1.transformName),
-    email: zod_1.z.string().email({ message: 'O email deve ter o formato padrão example@gmail.com' }),
-    password: zod_1.z.string().min(6, { message: 'A senha deve ter no mínimo 6 caracteres' }),
-    profilePictureUrl: zod_1.z.string().url().optional().nullable(),
-    birthDate: zod_1.z.coerce.date().optional().nullable(),
-    gender: (0, zod_1.nativeEnum)(client_1.Gender).optional().nullable(),
-    isActive: zod_1.z.boolean().default(true),
-    role: (0, zod_1.nativeEnum)(client_1.Role),
-    isEmailVerified: zod_1.z.boolean(),
-    createdAt: zod_1.z.coerce.date(),
-    updatedAt: zod_1.z.coerce.date(),
-    lastLogin: zod_1.z.coerce.date().optional().nullable()
+import { nativeEnum, z } from 'zod';
+import { transformName } from '../utils/transformName.js';
+import { Gender, Role } from '@prisma/client';
+export const UserSchema = z.object({
+    id: z.string().uuid(),
+    publicId: z.number().int().nonnegative(),
+    username: z.string().min(5, "O nome de usuário deve ter no mínimo 5 caracteres"),
+    name: z.string().min(3, { message: 'O nome deve ter no mínimo 3 caracteres' }).transform(transformName),
+    email: z.string().email({ message: 'O email deve ter o formato padrão example@gmail.com' }),
+    password: z.string().min(8, { message: 'A senha deve ter no mínimo 8 caracteres' }),
+    confirmPassword: z.string().min(8, { message: 'As senhas não conferem' }),
+    profilePictureUrl: z.string().url().optional().nullable(),
+    birthDate: z.coerce.date().optional().nullable(),
+    gender: nativeEnum(Gender).optional().nullable(),
+    isActive: z.boolean().default(true),
+    role: nativeEnum(Role),
+    isEmailVerified: z.boolean(),
+    verifyToken: z.string(),
+    createdAt: z.coerce.date(),
+    updatedAt: z.coerce.date(),
+    lastLogin: z.coerce.date().optional().nullable()
 });
-exports.userSubsetSchema = exports.UserSchema.pick({
+export const userSubsetSchema = UserSchema.pick({
     name: true,
     email: true,
     password: true,
+    confirmPassword: true,
 });
-exports.loginUserSchema = zod_1.z.object({
-    email: zod_1.z.string().email('Email inválido'),
-    password: zod_1.z.string().min(6, 'Senha inválida'),
+export const loginUserSchema = z.object({
+    email: z.string().email('Email inválido'),
+    password: z.string().min(8, 'Senha inválida'),
 });
-exports.userSubsetTaskSchema = exports.UserSchema.pick({
+export const userSubsetTaskSchema = UserSchema.pick({
     id: true,
     username: true,
     name: true,

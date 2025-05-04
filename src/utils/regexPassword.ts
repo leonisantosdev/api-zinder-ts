@@ -1,5 +1,5 @@
 
-import { UserSubset } from "../schemas/user.schema";
+import type { UserSubset } from "../schemas/user.schema.js";
 
 export const passwordRegexValidation = (userData: UserSubset) => {
   const passwordRegex = /^(?=.*[A-Z])(?=.*[@$!%*?&]).{8,}$/;

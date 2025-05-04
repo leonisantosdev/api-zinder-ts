@@ -1,6 +1,6 @@
 import express from 'express';
-import { UserController } from '../controllers/user.controller';
-import { validToken } from '../middlewares/auth.middleware';
+import { UserController } from '../controllers/user.controller.js';
+import { validToken } from '../middlewares/auth.middleware.js';
 
 const route = express.Router();
 const userControler = new UserController();
@@ -23,7 +23,7 @@ route.get('/:id', validToken, userControler.findById);
 // Atualiza um usuário pelo publicId
 route.patch('/:id', validToken, userControler.updateUser);
 
-// Recupera a senha do usuário
+
 route.post('/recover-password', userControler.forgotPassword);
 
 export default route;
