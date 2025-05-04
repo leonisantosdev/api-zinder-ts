@@ -4,20 +4,21 @@ import { UserSubset } from '../schemas/user.schema';
 import { number } from '../utils/randomNumber';
 import nodemailer from 'nodemailer';
 import { v4 as uuidv4 } from 'uuid';
-import { msgEmailValidation } from '../utils/msgEmailValidation';
+import { msgUserEmail } from '../utils/msgEmailValidation';
 import { logger } from '../config/winston/logger';
+import { getTransporter } from '../utils/sendEmailUser';
+import { addMinutes } from 'date-fns';
 
 export class UserServices {
   async createUserService ({ name, email, password }: UserSubset) {
     const hashedPassword = await hashPassword(password);
-    const emailVerifyToken = uuidv4();
+    const emailVerifyToken = uuidv4(); 
 
     const username = name
     .normalize('NFD')
     .replace(/[\u0300-\u036f]/g, '') 
     .replace(/\s+/g, '.')
     .toLowerCase() + number;''
-    logger.info(`Criando username: ${username}`)
 
     await prisma.user.create({
       data: {
@@ -31,33 +32,21 @@ export class UserServices {
         verifyToken: emailVerifyToken
       }
       });
-      logger.info("Conta criada com sucesso!")
 
       return emailVerifyToken
   };
 
   async sendVerificationEmail (email: string, token: string) {
-    const transporter = nodemailer.createTransport({
-      service: `${process.env.SERVICE_GMAIL}`,
-      auth: {
-        user: `${process.env.EMAIL_USER}`,
-        pass: `${process.env.EMAIL_PASSWORD}`
-      }
-    });
-
-    logger.info(`Transporter: ${transporter}`);
+    const transporter = getTransporter();
 
     const mailOptions = {
       from: `${process.env.EMAIL_USER}`,
       to: email, 
       subject: `Verificação de E-mail`,
-      text: msgEmailValidation(token)
-    };
-
-    logger.info(`Transporter: ${mailOptions}`);
+      text: msgUserEmail({route: '/verify-email', token: token, msg: 'Para verificar seu e-mail, clique no link abaixo:'}),};
 
     await transporter.sendMail(mailOptions);
-  }
+  };
 
   async findByToken (token: string) {
     const user = await prisma.user.findFirst({
@@ -67,7 +56,7 @@ export class UserServices {
     });
 
     return user;
-  }
+  };
 
   async userUpdateByToken (userId: string) {
     await prisma.user.update({
@@ -77,7 +66,7 @@ export class UserServices {
         verifyToken: null,
       },
     })
-  }
+  };
 
   async findAllUsers (): Promise<object> {
     return await prisma.user.findMany({
@@ -115,5 +104,41 @@ export class UserServices {
         password: hashedPassword
       },
     });
+  };
+
+  async sendEmailToChangePassword (email: string) {
+    const user = await prisma.user.findUnique({
+      where: {
+        email
+      }
+    });
+
+    console.log(user)
+
+    if (!user) {
+      throw new Error("Nenhum usuário encontrado com esse e-mail. Tente novamente.");
+    };
+
+    const token = uuidv4();
+    const expiresAt = addMinutes(new Date(), 15);
+
+    await prisma.passwordResetToken.create({
+      data: {
+        token,
+        userId: user.id,
+        expiresAt,
+      }
+    })
+
+    const transporter = getTransporter();
+
+    const mailOptions = {
+      from: `${process.env.EMAIL_USER}`,
+      to: email, 
+      subject: `Recuperação de Senha`,
+      text: msgUserEmail({route: '/change-password', token: token, msg: 'Para redefinir sua senha, clique no link abaixo:'})
+      };
+
+    await transporter.sendMail(mailOptions);
   };
 };

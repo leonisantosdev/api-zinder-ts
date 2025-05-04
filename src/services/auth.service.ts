@@ -24,7 +24,7 @@ export class AuthService {
     const emailVerified = await this.isValidEmail(email);
 
     if (!emailVerified) {
-      throw new Error("Email não verificado.");
+      throw new Error("Por favor, verifique seu e-mail antes de fazer login.");
     };
 
     const token = this.genToken(user.id);

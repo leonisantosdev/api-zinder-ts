@@ -23,4 +23,7 @@ route.get('/:id', validToken, userControler.findById);
 // Atualiza um usuário pelo publicId
 route.patch('/:id', validToken, userControler.updateUser);
 
+// Recupera a senha do usuário
+route.post('/recover-password', userControler.forgotPassword);
+
 export default route;

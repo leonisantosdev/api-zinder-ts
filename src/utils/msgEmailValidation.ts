@@ -1,6 +1,6 @@
-export const msgEmailValidation = (token: string) => {
+export const msgUserEmail = ({route, token, msg}: { route: string, token?: string, msg?: string }) => {
   return `
-Clique no link para verificar sua conta:
+${msg}
 
-${process.env.BASE_URL}/verify-email?token=${token}`
+${process.env.BASE_URL}${route}?token=${token}`
 }

@@ -1,9 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
-import { AdmServices } from '../admin/adm.service';
 
 const JWT_SECRET = process.env.JWT_SECRET!;
-const admService = new AdmServices();
 
 export const validToken = async (req: Request, res: Response, next: NextFunction) => {
   try {

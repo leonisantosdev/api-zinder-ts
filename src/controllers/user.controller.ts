@@ -20,7 +20,7 @@ export class UserController {
 
       await userService.sendVerificationEmail(userData.email, verifyToken);
 
-      res.status(201).json({ message: "Usuário cadastrado! Verifique seu email." });
+      res.status(201).json({ message: "Usuário cadastrado! Verifique seu e-mail." });
     } catch (err) {
       if(err instanceof z.ZodError) {
         const message =  err.errors[0]?.message || "Erro de validação, verifique os dados enviados."
@@ -111,4 +111,19 @@ export class UserController {
       return;
     };
   };
+
+  async forgotPassword (req: Request, res: Response) {
+    try {
+      const { email } = req.body;
+      console.log(email)
+
+      await userService.sendEmailToChangePassword(email);
+
+      res.status(201).send({ message: "Verifique seu e-mail para redefiner sua senha." });
+    } catch (err) {
+      const message = (err as Error).message || "Erro interno do servidor.";
+      
+      res.status(500).json({ message });
+    };
+  }
 };
