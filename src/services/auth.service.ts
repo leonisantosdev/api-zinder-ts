@@ -54,5 +54,5 @@ export class AuthService {
     });
 
     return user?.isEmailVerified || false;
-  }
+  };
 }

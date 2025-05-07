@@ -3,7 +3,6 @@ import { hashPassword } from '../utils/hashPassword.js';
 import type { UserSubset } from '../schemas/user.schema.js';
 import { number } from '../utils/randomNumber.js';
 import { v4 as uuidv4 } from 'uuid';
-// import { msgUserEmail } from '../utils/msgEmailValidation.js';
 import { getTransporter } from '../utils/sendEmailUser.js';
 import { addMinutes } from 'date-fns';
 
@@ -152,7 +151,7 @@ export class UserServices {
     };
 
     const token = uuidv4();
-    const expiresAt = addMinutes(new Date(), 15);
+    const expiresAt = addMinutes(new Date(), 3);
 
     await prisma.passwordResetToken.create({
       data: {
@@ -211,5 +210,5 @@ export class UserServices {
     });
 
     return user;
-  }
+  };
 };

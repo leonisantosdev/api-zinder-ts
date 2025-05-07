@@ -21,7 +21,7 @@ export class TaskServices {
       }
     }
   });
-  }
+  };
 
   async findAllTasks (id: string): Promise<object> {
     return await prisma.task.findMany({

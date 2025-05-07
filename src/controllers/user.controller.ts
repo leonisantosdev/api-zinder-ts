@@ -45,11 +45,11 @@ export class UserController {
   
       await userService.userUpdateByToken(user.id);
   
-      res.redirect('http://localhost:5173/verify-email');
+      res.redirect('http://localhost:5173/login?emailVerified=true');
     } catch(error) {
-
+      console.log(error)
     }
-  }
+  };
 
   async getUsers (req: Request, res: Response) {
     try {
@@ -124,5 +124,5 @@ export class UserController {
       
       res.status(500).json({ message });
     };
-  }
+  };
 };
