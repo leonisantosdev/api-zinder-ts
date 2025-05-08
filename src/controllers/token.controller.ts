@@ -4,7 +4,7 @@ import { TokenServices } from 'services/token.service';
 const tokenService = new TokenServices();
 
 export class TokenController {
-  async validateTokenUserResetPassword(req: Request, res: Response) {
+  async validateTokenUserForgotPassword(req: Request, res: Response) {
     try {
       const { token } = req.body as { token: string };
 

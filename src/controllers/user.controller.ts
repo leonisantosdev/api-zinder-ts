@@ -113,7 +113,7 @@ export class UserController {
 
   async forgotPassword (req: Request, res: Response) {
     try {
-      const { email } = req.body;
+      const { email } = req.body as { email: string };
       console.log(email)
 
       await userService.sendEmailToChangePassword(email);
@@ -124,5 +124,16 @@ export class UserController {
       
       res.status(500).json({ message });
     };
+  };
+  
+  async forgotChangePassword(req: Request, res: Response) {
+    try {
+      const { password } = req.body as { password: string };
+      console.log(password)
+      // RECEBENDO A SENHA DO FRONT - CONTINUAR A E TRATAR A PARTIR DAQUI
+      res.status(200).send({ message: "Cheguei aqui no password" })
+    } catch (error) {
+      console.log(error)
+    }
   };
 };

@@ -6,6 +6,7 @@ const JWT_SECRET = process.env.JWT_SECRET!;
 export const validToken = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const token = req.headers.authorization?.split(' ')[1];
+    console.log(token)
 
     if (!token) {
       res.status(401).send({ message: 'Acesso negado' });
