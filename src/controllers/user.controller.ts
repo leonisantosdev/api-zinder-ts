@@ -13,7 +13,7 @@ export class UserController {
     try {
       const userData = userSubsetSchema.parse(req.body);
 
-      passwordRegexValidation(userData);
+      passwordRegexValidation(userData.password);
 
       const verifyToken = await userService.createUserService(userData);
 
@@ -114,7 +114,6 @@ export class UserController {
   async forgotPassword (req: Request, res: Response) {
     try {
       const { email } = req.body as { email: string };
-      console.log(email)
 
       await userService.sendEmailToChangePassword(email);
 
@@ -128,12 +127,19 @@ export class UserController {
   
   async forgotChangePassword(req: Request, res: Response) {
     try {
-      const { password } = req.body as { password: string };
-      console.log(password)
-      // RECEBENDO A SENHA DO FRONT - CONTINUAR A E TRATAR A PARTIR DAQUI
-      res.status(200).send({ message: "Cheguei aqui no password" })
+
+      const { password, token } = req.body as { password: string, token: string };
+
+      passwordRegexValidation(password);
+
+      await userService.updateNewPasswordUser(password, token);
+
+      res.status(200).send({ message: "Senha redefinida com sucesso!" });
     } catch (error) {
-      console.log(error)
+      const message  = (error as Error).message || "Erro interno do servidor.";
+
+      res.status(500).json({ message });
+      return;
     }
   };
 };

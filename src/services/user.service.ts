@@ -1,7 +1,7 @@
 import { prisma } from '../config/prisma/prismaConfig.js';
 import { hashPassword } from '../utils/hashPassword.js';
 import type { UserSubset } from '../schemas/user.schema.js';
-import { number } from '../utils/randomNumber.js';
+import { generateRandomNumber } from '../utils/randomNumber.js';
 import { v4 as uuidv4 } from 'uuid';
 import { getTransporter } from '../utils/sendEmailUser.js';
 import { addMinutes } from 'date-fns';
@@ -15,7 +15,7 @@ export class UserServices {
     .normalize('NFD')
     .replace(/[\u0300-\u036f]/g, '') 
     .replace(/\s+/g, '.')
-    .toLowerCase() + number;''
+    .toLowerCase() + generateRandomNumber();''
 
     const userExists = await this.findUserByEmail(email);
 
@@ -170,7 +170,7 @@ export class UserServices {
       subject: `Redefinição de Senha`,
       html: `
       <div style="font-family: Arial, sans-serif; text-align: center; max-width: 600px; margin: 0 auto; padding: 20px; background-color: rgb(241, 241, 241); border-radius: 8px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);">
-        <h2 style="color: #333; font-size: 24px; margin-bottom: 20px;">Bem-vindo(a) à Zinder!</h2>
+        <h2 style="color: #333; font-size: 24px; margin-bottom: 20px;">Redefinição de senha!</h2>
         <p style="color: #555; font-size: 16px; line-height: 1.5; margin-bottom: 20px;">
           Para redefinir sua senha, clique no botão abaixo. 
           O processo é rápido e garante a segurança da sua conta.
@@ -211,4 +211,27 @@ export class UserServices {
 
     return user;
   };
+
+  async updateNewPasswordUser (newPassword: string, token: string) {
+    const hashedPassword = await hashPassword(newPassword);
+
+    const resetToken = await prisma.passwordResetToken.findFirst({
+      where: { token },
+      include: { user: true },
+    });
+
+    if (!resetToken || !resetToken.user || resetToken?.used) {
+      throw new Error('Token inválido ou usuário não encontrado.');
+    }
+
+    await prisma.user.update({
+      where: { id: resetToken.user.id },
+      data: { password: hashedPassword },
+    });
+
+    await prisma.passwordResetToken.update({
+      where: { id: resetToken.id },
+      data: { used: true }
+    });
+  }
 };

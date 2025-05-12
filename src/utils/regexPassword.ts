@@ -1,10 +1,8 @@
 
-import type { UserSubset } from "../schemas/user.schema.js";
-
-export const passwordRegexValidation = (userData: UserSubset) => {
+export const passwordRegexValidation = (password: string) => {
   const passwordRegex = /^(?=.*[A-Z])(?=.*[@$!%*?&]).{8,}$/;
 
-  if (!passwordRegex.test(userData.password)) {
+  if (!passwordRegex.test(password)) {
     throw new Error("A senha deve conter pelo menos 8 caracteres, incluindo uma letra maiúscula, e um caractere especial.");
   }
 };

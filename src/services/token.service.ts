@@ -14,10 +14,5 @@ export class TokenServices {
     if(resetToken.expiresAt < new Date() || resetToken.used === true) {
       throw new Error("Token expirado.");
     }
-
-    await prisma.passwordResetToken.update({
-      where: { id: resetToken.id },
-      data: { used: true }
-    });
   }
 };
