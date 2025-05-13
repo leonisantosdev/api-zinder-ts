@@ -1,6 +1,6 @@
 import { prisma } from '../config/prisma/prismaConfig.js';
 import jwt from 'jsonwebtoken';
-import { assert, error } from "console";
+import { assert } from "console";
 import type { loginUser } from '../schemas/user.schema.js';
 import { verifyPassword } from '../utils/hashPassword.js';
 

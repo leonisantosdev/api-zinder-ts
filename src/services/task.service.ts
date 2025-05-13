@@ -4,8 +4,8 @@ import type { TaskSubset } from '../schemas/task.schema.js'
 
 
 export class TaskServices {
-  async createTaskService({ title, description, priority, type, status }: TaskSubset, user: User) {
-    
+  async createTaskService({ title, description, priority, type, status }: TaskSubset, userId: string) {
+  
   await prisma.task.create({
     data: {
       title,
@@ -14,13 +14,14 @@ export class TaskServices {
       priority,
       type,
       user: {
-        connect: { id: user.id }
+        connect: { id: userId }
       },
       createdBy: {
-        connect: { id: user.id }
+        connect: { id: userId }
       }
     }
   });
+
   };
 
   async findAllTasks (id: string): Promise<object> {

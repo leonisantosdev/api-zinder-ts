@@ -22,6 +22,8 @@ export const UserSchema = z.object({
   lastLogin: z.coerce.date().optional().nullable()
 });
 
+export type User = z.infer<typeof UserSchema>;
+
 export const userSubsetSchema = UserSchema.pick({
   name: true,
   email: true,
