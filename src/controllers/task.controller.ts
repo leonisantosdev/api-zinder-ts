@@ -10,7 +10,7 @@ export class TaskController {
   async createTask(req: Request, res: Response) {
     try {
       const taskData = taskCreateSchema.parse(req.body);
-      // console.log(taskData)
+      // console.log(taskData) 
 
       if(!req.user) {
         throw new Error("Usuário não encontrado	");
