@@ -45,7 +45,7 @@ export class UserController {
   
       await userService.userUpdateByToken(user.id);
   
-      res.redirect('front-end-zinder-production.up.railway.app/login?emailVerified=true');
+      res.redirect('https://front-end-zinder-production.up.railway.app/login?emailVerified=true');
     } catch(error) {
       console.log(error)
     }
