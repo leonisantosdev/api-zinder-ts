@@ -44,4 +44,5 @@ export class AuthService {
         });
         return (user === null || user === void 0 ? void 0 : user.isEmailVerified) || false;
     }
+    ;
 }

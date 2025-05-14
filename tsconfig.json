@@ -1,8 +1,8 @@
 {
   "compilerOptions": {
     "target": "ES2017",                    // Define o alvo como ES2017 (ou superior)
-    "module": "ESNext",                    // Para usar módulos ES
-    "moduleResolution": "node",            // Resolução de módulos no estilo Node.js
+    "module": "NodeNext",                    // Para usar módulos ES
+    "moduleResolution": "nodenext",            // Resolução de módulos no estilo Node.js
     "outDir": "./dist",                    // Diretório de saída
     "rootDir": "./src",                    // Diretório de origem dos arquivos .ts
     "esModuleInterop": true,               // Compatibilidade para importação de módulos

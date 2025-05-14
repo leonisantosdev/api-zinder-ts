@@ -1,4 +1,3 @@
-import type { User } from '@prisma/client';
 import { prisma } from '../config/prisma/prismaConfig.js'
 import type { TaskSubset } from '../schemas/task.schema.js'
 

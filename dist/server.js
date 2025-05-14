@@ -1,7 +1,8 @@
 import express from 'express';
 import cors from 'cors';
 import userRoutes from './routes/user.routes.js';
-import taskRoute from './routes/task.routes.js';
+import taskRoutes from './routes/task.routes.js';
+import tokenRoutes from './routes/token.routes.js';
 const app = express();
 app.use(cors({
     origin: "http://localhost:5173",
@@ -10,9 +11,10 @@ app.use(cors({
     credentials: false,
 }));
 app.use(express.json());
-// Rota dos Usuários
+// ROTAS GERAIS
 app.use('/user', userRoutes);
-app.use('/task', taskRoute);
+app.use('/task', taskRoutes);
+app.use('/token', tokenRoutes);
 // Roda o servidor
 app.listen(3333, () => {
     console.log(`

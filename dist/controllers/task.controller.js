@@ -7,17 +7,17 @@ export class TaskController {
     async createTask(req, res) {
         try {
             const taskData = taskCreateSchema.parse(req.body);
+            // console.log(taskData)
             if (!req.user) {
                 throw new Error("Usuário não encontrado	");
             }
             const userData = req.user;
-            taskService.createTaskService(taskData, userData);
+            await taskService.createTaskService(taskData, userData);
             res.status(201).json({ message: "Tarefa criada com sucesso" });
-            return;
         }
         catch (error) {
+            // console.log(error)
             res.status(500).json({ message: "Erro interno do servidor" });
-            return;
         }
     }
     ;

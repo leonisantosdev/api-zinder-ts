@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "tsx --watch src/server.ts && npm run build ",
     "build": "tsc",
-    "start": "npm run build && cross-env NODE_ENV=production node dist/server.js"
+    "start": "npm run build && node dist/server.js"
   },
   "prisma": {
     "schema": "prisma/schema"

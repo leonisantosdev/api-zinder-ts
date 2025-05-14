@@ -1,6 +1,6 @@
 import { prisma } from '../config/prisma/prismaConfig.js';
 export class TaskServices {
-    async createTaskService({ title, description, priority, type, status }, user) {
+    async createTaskService({ title, description, priority, type, status }, userId) {
         await prisma.task.create({
             data: {
                 title,
@@ -9,14 +9,15 @@ export class TaskServices {
                 priority,
                 type,
                 user: {
-                    connect: { id: user.id }
+                    connect: { id: userId }
                 },
                 createdBy: {
-                    connect: { id: user.id }
+                    connect: { id: userId }
                 }
             }
         });
     }
+    ;
     async findAllTasks(id) {
         return await prisma.task.findMany({
             where: {

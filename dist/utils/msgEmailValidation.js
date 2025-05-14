@@ -1,6 +1,6 @@
-export const msgUserEmail = ({ route, token, msg }) => {
+export const msgUserEmail = ({ urlBase, route, token, msg }) => {
     return `
 ${msg}
 
-${process.env.BASE_URL}${route}?token=${token}`;
+${urlBase}${route}?token=${token}`;
 };

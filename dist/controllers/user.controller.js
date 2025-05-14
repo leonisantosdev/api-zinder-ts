@@ -10,7 +10,7 @@ export class UserController {
         var _a;
         try {
             const userData = userSubsetSchema.parse(req.body);
-            passwordRegexValidation(userData);
+            passwordRegexValidation(userData.password);
             const verifyToken = await userService.createUserService(userData);
             await userService.sendVerificationEmail(userData.email, verifyToken);
             res.status(201).json({ message: "Usuário cadastrado! Verifique seu e-mail." });
@@ -37,11 +37,13 @@ export class UserController {
                 return;
             }
             await userService.userUpdateByToken(user.id);
-            res.status(200).send({ message: "E-mail verificado com sucesso! Agora você pode fazer login." });
+            res.redirect('http://localhost:5173/login?emailVerified=true');
         }
         catch (error) {
+            console.log(error);
         }
     }
+    ;
     async getUsers(req, res) {
         try {
             const users = await userService.findAllUsers();
@@ -104,9 +106,8 @@ export class UserController {
     async forgotPassword(req, res) {
         try {
             const { email } = req.body;
-            console.log(email);
             await userService.sendEmailToChangePassword(email);
-            res.status(201).send({ message: "Verifique seu e-mail para redefiner sua senha." });
+            res.status(200).send({ message: "Verifique seu e-mail para redefinir sua senha!" });
         }
         catch (err) {
             const message = err.message || "Erro interno do servidor.";
@@ -114,5 +115,20 @@ export class UserController {
         }
         ;
     }
+    ;
+    async forgotChangePassword(req, res) {
+        try {
+            const { password, token } = req.body;
+            passwordRegexValidation(password);
+            await userService.updateNewPasswordUser(password, token);
+            res.status(200).send({ message: "Senha redefinida com sucesso!" });
+        }
+        catch (error) {
+            const message = error.message || "Erro interno do servidor.";
+            res.status(500).json({ message });
+            return;
+        }
+    }
+    ;
 }
 ;
