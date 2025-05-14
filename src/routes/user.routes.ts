@@ -9,7 +9,7 @@ const userController = new UserController();
 route.post('/register', userController.createUser);
 
 // Rota para verificar o email do usuário
-route.get('/verify-email', userController.verifyEmail)
+route.get('/verify-email', userController.verifyEmail);
 
 // Rota para logar os usuários
 route.post('/login', userController.login);
@@ -28,7 +28,5 @@ route.patch('/:id', validToken, userController.updateUser);
 
 // Rota para enviar email para redefinição de senha do usuário
 route.post('/send-email-forgot-password', userController.forgotPassword);
-
-
 
 export default route;

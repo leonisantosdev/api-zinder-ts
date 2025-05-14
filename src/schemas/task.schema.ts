@@ -3,7 +3,7 @@ import { nativeEnum, z } from 'zod';
 
 export const TaskSchema = z.object({
   id: z.number(),
-  title: z.string().min(1, "O título deve conter no mínimo 1 caracter"),
+  title: z.string().min(1, 'O título deve conter no mínimo 1 caracter'),
   description: z.string().optional().nullable(),
   status: nativeEnum(Status).default('pending'),
   priority: nativeEnum(Priority).default('low'),

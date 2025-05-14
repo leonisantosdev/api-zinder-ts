@@ -6,11 +6,10 @@ export class TokenServices {
             include: { user: true },
         });
         if (!resetToken) {
-            throw new Error("Token inválido");
+            throw new Error('Token inválido');
         }
         if (resetToken.expiresAt < new Date() || resetToken.used === true) {
-            throw new Error("Token expirado.");
+            throw new Error('Token expirado.');
         }
     }
 }
-;

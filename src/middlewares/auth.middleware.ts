@@ -3,7 +3,11 @@ import jwt from 'jsonwebtoken';
 
 const JWT_SECRET = process.env.JWT_SECRET!;
 
-export const validToken = async (req: Request, res: Response, next: NextFunction) => {
+export const validToken = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const token = req.headers.authorization?.split(' ')[1];
 
@@ -12,9 +16,13 @@ export const validToken = async (req: Request, res: Response, next: NextFunction
       return;
     }
 
-    const { id } = jwt.verify(token, JWT_SECRET) as { id: string; iat: number; exp: number };
+    const { id } = jwt.verify(token, JWT_SECRET) as {
+      id: string;
+      iat: number;
+      exp: number;
+    };
 
-    req.user = id
+    req.user = id;
     next();
   } catch (error) {
     res.status(401).send({ message: 'Token inválido ou expirado' });

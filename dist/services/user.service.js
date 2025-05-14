@@ -13,10 +13,10 @@ export class UserServices {
             .replace(/[\u0300-\u036f]/g, '')
             .replace(/\s+/g, '.')
             .toLowerCase() + generateRandomNumber();
-        '';
+        ('');
         const userExists = await this.findUserByEmail(email);
         if (userExists) {
-            throw new Error("E-mail já cadastrado. Tente novamente com outro e-mail.");
+            throw new Error('E-mail já cadastrado. Tente novamente com outro e-mail.');
         }
         await prisma.user.create({
             data: {
@@ -27,15 +27,14 @@ export class UserServices {
                 role: 'user',
                 isActive: true,
                 isEmailVerified: false,
-                verifyToken: emailVerifyToken
-            }
+                verifyToken: emailVerifyToken,
+            },
         });
         return emailVerifyToken;
     }
-    ;
     async sendVerificationEmail(email, token) {
         const transporter = getTransporter();
-        const url = `https://apizinder.up.railway.app/user/verify-email?token=${token}`;
+        const url = `${process.env.API_URL}/user/verify-email?token=${token}`;
         const mailOptions = {
             from: `${process.env.EMAIL_USER}`,
             to: email,
@@ -68,20 +67,18 @@ export class UserServices {
       <footer style="font-family: Arial, sans-serif; text-align: center; font-size: 12px; color: #999; margin-top: 40px;">
         <p>© ${new Date().getFullYear()} Zinder. Todos os direitos reservados.</p>
       </footer>
-    `
+    `,
         };
         await transporter.sendMail(mailOptions);
     }
-    ;
     async findByToken(token) {
         const user = await prisma.user.findFirst({
             where: {
-                verifyToken: token
-            }
+                verifyToken: token,
+            },
         });
         return user;
     }
-    ;
     async userUpdateByToken(userId) {
         await prisma.user.update({
             where: { id: userId },
@@ -91,54 +88,49 @@ export class UserServices {
             },
         });
     }
-    ;
     async findAllUsers() {
         return await prisma.user.findMany({
             select: {
                 username: true,
                 name: true,
                 email: true,
-            }
+            },
         });
     }
-    ;
     async findByIdService(publicId) {
         return await prisma.user.findUnique({
             where: {
-                publicId
+                publicId,
             },
             select: {
                 publicId: true,
                 name: true,
                 email: true,
-            }
+            },
         });
     }
-    ;
     async updateUserById(publicId, { name, email, password }) {
         const hashedPassword = await hashPassword(password);
         await prisma.user.update({
             where: {
-                publicId
+                publicId,
             },
             data: {
                 name,
                 email,
-                password: hashedPassword
+                password: hashedPassword,
             },
         });
     }
-    ;
     async sendEmailToChangePassword(email) {
         const user = await prisma.user.findUnique({
             where: {
-                email
-            }
+                email,
+            },
         });
         if (!user) {
-            throw new Error("Nenhum usuário encontrado com esse e-mail. Tente novamente.");
+            throw new Error('Nenhum usuário encontrado com esse e-mail. Tente novamente.');
         }
-        ;
         const token = uuidv4();
         const expiresAt = addMinutes(new Date(), 3);
         await prisma.passwordResetToken.create({
@@ -146,10 +138,10 @@ export class UserServices {
                 token,
                 userId: user.id,
                 expiresAt,
-            }
+            },
         });
         const transporter = getTransporter();
-        const url = `https://front-end-zinder-production.up.railway.app/forgot-change-password?token=${token}`;
+        const url = `${process.env.API_URL}/forgot-change-password?token=${token}`;
         const mailOptions = {
             from: `${process.env.EMAIL_USER}`,
             to: email,
@@ -182,20 +174,18 @@ export class UserServices {
       <footer style="font-family: Arial, sans-serif; text-align: center; font-size: 12px; color: #999; margin-top: 40px;">
         <p>© ${new Date().getFullYear()} Zinder. Todos os direitos reservados.</p>
       </footer>
-    `
+    `,
         };
         await transporter.sendMail(mailOptions);
     }
-    ;
     async findUserByEmail(email) {
         const user = await prisma.user.findUnique({
             where: {
-                email
-            }
+                email,
+            },
         });
         return user;
     }
-    ;
     async updateNewPasswordUser(newPassword, token) {
         const hashedPassword = await hashPassword(newPassword);
         const resetToken = await prisma.passwordResetToken.findFirst({
@@ -211,8 +201,7 @@ export class UserServices {
         });
         await prisma.passwordResetToken.update({
             where: { id: resetToken.id },
-            data: { used: true }
+            data: { used: true },
         });
     }
 }
-;

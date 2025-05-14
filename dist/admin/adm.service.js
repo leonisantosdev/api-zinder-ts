@@ -4,11 +4,11 @@ export class AdmServices {
         var _a;
         const user = await prisma.user.findUnique({
             where: {
-                id: userId
+                id: userId,
             },
             select: {
-                role: true
-            }
+                role: true,
+            },
         });
         return (_a = user === null || user === void 0 ? void 0 : user.role) !== null && _a !== void 0 ? _a : null;
     }

@@ -4,26 +4,29 @@ import cors from 'cors';
 import userRoutes from './routes/user.routes.js';
 import taskRoutes from './routes/task.routes.js';
 import tokenRoutes from './routes/token.routes.js';
+import './config/env/env.js';
 
 const app: Application = express();
-app.use(cors({
-  origin: "https://front-end-zinder-production.up.railway.app",
-  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-  allowedHeaders: 'Content-Type, Authorization',
-  credentials: false,
-}));
+app.use(
+  cors({
+    origin: `${process.env.API_URL}`,
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    allowedHeaders: 'Content-Type, Authorization',
+    credentials: false,
+  })
+);
 
 app.use(express.json());
 
 // ROTAS GERAIS
 app.use('/user', userRoutes);
 app.use('/task', taskRoutes);
-app.use('/token', tokenRoutes)
+app.use('/token', tokenRoutes);
 
 // Roda o servidor
 app.listen(3333, () => {
   console.log(`
 Server running in
-URL: https://apizinder.up.railway.app
+URL: ${process.env.API_URL}
 `);
 });

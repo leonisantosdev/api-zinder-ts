@@ -5,12 +5,12 @@ export class AdmServices {
   async findRole(userId: UserSubsetTask['id']) {
     const user = await prisma.user.findUnique({
       where: {
-        id: userId
+        id: userId,
       },
       select: {
-        role: true
-      }
-    })
+        role: true,
+      },
+    });
 
     return user?.role ?? null;
   }

@@ -5,11 +5,20 @@ import { Gender, Role } from '@prisma/client';
 export const UserSchema = z.object({
   id: z.string().uuid(),
   publicId: z.number().int().nonnegative(),
-  username: z.string().min(5, "O nome de usuário deve ter no mínimo 5 caracteres"),
-  name: z.string().min(3, {message: 'O nome deve ter no mínimo 3 caracteres'}).transform(transformName),
-  email: z.string().email({message: 'O email deve ter o formato padrão example@gmail.com'}),
-  password: z.string().min(8, {message: 'A senha deve ter no mínimo 8 caracteres'}),
-  confirmPassword: z.string().min(8, {message: 'As senhas não conferem'}),
+  username: z
+    .string()
+    .min(5, 'O nome de usuário deve ter no mínimo 5 caracteres'),
+  name: z
+    .string()
+    .min(3, { message: 'O nome deve ter no mínimo 3 caracteres' })
+    .transform(transformName),
+  email: z
+    .string()
+    .email({ message: 'O email deve ter o formato padrão example@gmail.com' }),
+  password: z
+    .string()
+    .min(8, { message: 'A senha deve ter no mínimo 8 caracteres' }),
+  confirmPassword: z.string().min(8, { message: 'As senhas não conferem' }),
   profilePictureUrl: z.string().url().optional().nullable(),
   birthDate: z.coerce.date().optional().nullable(),
   gender: nativeEnum(Gender).optional().nullable(),
@@ -19,7 +28,7 @@ export const UserSchema = z.object({
   verifyToken: z.string(),
   createdAt: z.coerce.date(),
   updatedAt: z.coerce.date(),
-  lastLogin: z.coerce.date().optional().nullable()
+  lastLogin: z.coerce.date().optional().nullable(),
 });
 
 export type User = z.infer<typeof UserSchema>;
@@ -48,4 +57,4 @@ export const userSubsetTaskSchema = UserSchema.pick({
   role: true,
 });
 
-export type UserSubsetTask = z.infer<typeof userSubsetTaskSchema>
+export type UserSubsetTask = z.infer<typeof userSubsetTaskSchema>;

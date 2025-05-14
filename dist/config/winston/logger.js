@@ -9,12 +9,12 @@ export const logger = createLogger({
     logFormat),
     transports: [
         new transports.Console({
-            format: combine(colorize(), logFormat)
+            format: combine(colorize(), logFormat),
         }),
         new transports.File({ filename: 'src/logs/error.log', level: 'error' }),
-        new transports.File({ filename: 'src/logs/combined.log' })
+        new transports.File({ filename: 'src/logs/combined.log' }),
     ],
     exceptionHandlers: [
-        new transports.File({ filename: 'src/logs/exceptions.log' })
-    ]
+        new transports.File({ filename: 'src/logs/exceptions.log' }),
+    ],
 });

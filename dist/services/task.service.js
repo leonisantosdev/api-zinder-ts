@@ -9,19 +9,18 @@ export class TaskServices {
                 priority,
                 type,
                 user: {
-                    connect: { id: userId }
+                    connect: { id: userId },
                 },
                 createdBy: {
-                    connect: { id: userId }
-                }
-            }
+                    connect: { id: userId },
+                },
+            },
         });
     }
-    ;
     async findAllTasks(id) {
         return await prisma.task.findMany({
             where: {
-                userId: id
+                userId: id,
             },
             select: {
                 title: true,
@@ -43,8 +42,7 @@ export class TaskServices {
                         username: true,
                     },
                 },
-            }
+            },
         });
     }
-    ;
 }
