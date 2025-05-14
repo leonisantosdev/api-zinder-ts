@@ -35,7 +35,7 @@ export class UserServices {
     ;
     async sendVerificationEmail(email, token) {
         const transporter = getTransporter();
-        const url = `http://localhost:3333/user/verify-email?token=${token}`;
+        const url = `front-end-zinder-production.up.railway.app/user/verify-email?token=${token}`;
         const mailOptions = {
             from: `${process.env.EMAIL_USER}`,
             to: email,
