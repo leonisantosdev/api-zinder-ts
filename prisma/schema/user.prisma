@@ -21,6 +21,7 @@ model User {
   createdTasks        Task[]               @relation("CreatedTasks")
   updatedTasks        Task[]               @relation("UpdatedTasks")
   passwordResetTokens PasswordResetToken[]
+  @@map("User")
 }
 
 enum Gender {

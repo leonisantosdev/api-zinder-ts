@@ -7,7 +7,7 @@ import tokenRoutes from './routes/token.routes.js';
 
 const app: Application = express();
 app.use(cors({
-  origin: "http://localhost:5173",
+  origin: "https://front-end-zinder-production.up.railway.app",
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   allowedHeaders: 'Content-Type, Authorization',
   credentials: false,
