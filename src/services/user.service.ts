@@ -162,7 +162,7 @@ export class UserServices {
     })
 
     const transporter = getTransporter();
-    const url = `http://localhost:5173/forgot-change-password?token=${token}`;
+    const url = `front-end-zinder-production.up.railway.app/forgot-change-password?token=${token}`;
 
     const mailOptions = {
       from: `${process.env.EMAIL_USER}`,

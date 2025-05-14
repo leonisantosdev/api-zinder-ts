@@ -5,7 +5,7 @@ import taskRoutes from './routes/task.routes.js';
 import tokenRoutes from './routes/token.routes.js';
 const app = express();
 app.use(cors({
-    origin: "http://localhost:5173",
+    origin: "https://front-end-zinder-production.up.railway.app",
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     allowedHeaders: 'Content-Type, Authorization',
     credentials: false,
@@ -19,6 +19,6 @@ app.use('/token', tokenRoutes);
 app.listen(3333, () => {
     console.log(`
 Server running in
-URL: http://localhost:3333
+URL: https://apizinder.up.railway.app
 `);
 });
