@@ -24,6 +24,6 @@ app.use('/token', tokenRoutes)
 app.listen(3333, () => {
   console.log(`
 Server running in
-URL: http://localhost:3333
+URL: https://apizinder.up.railway.app
 `);
 });
