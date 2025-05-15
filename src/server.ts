@@ -24,7 +24,7 @@ app.use('/task', taskRoutes);
 app.use('/token', tokenRoutes);
 
 // Roda o servidor
-app.listen(3333, () => {
+app.listen(process.env.PORT || 3333, () => {
   console.log(`
 Server running in
 URL: ${process.env.API_URL}

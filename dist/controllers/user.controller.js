@@ -31,13 +31,15 @@ export class UserController {
     async verifyEmail(req, res) {
         try {
             const { token } = req.query;
+            // console.log(token);
             const user = await userService.findByToken(token);
+            // console.log(user);
             if (!user) {
                 res.status(400).send({ message: 'Token inválido ou expirado.' });
                 return;
             }
             await userService.userUpdateByToken(user.id);
-            res.redirect(`${process.env.API_URL}/login?emailVerified=true`);
+            res.redirect(`${process.env.FRONT_URL}/login?emailVerified=true`);
         }
         catch (error) {
             console.log(error);

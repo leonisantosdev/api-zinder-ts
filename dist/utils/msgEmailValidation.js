@@ -1,4 +1,4 @@
-export const msgUserEmail = ({ urlBase, route, token, msg }) => {
+export const msgUserEmail = ({ urlBase, route, token, msg, }) => {
     return `
 ${msg}
 

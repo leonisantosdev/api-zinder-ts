@@ -6,7 +6,7 @@ import tokenRoutes from './routes/token.routes.js';
 import './config/env/env.js';
 const app = express();
 app.use(cors({
-    origin: `${process.env.API_URL}`,
+    origin: `${process.env.FRONT_URL}`,
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     allowedHeaders: 'Content-Type, Authorization',
     credentials: false,
@@ -17,7 +17,7 @@ app.use('/user', userRoutes);
 app.use('/task', taskRoutes);
 app.use('/token', tokenRoutes);
 // Roda o servidor
-app.listen(3333, () => {
+app.listen(process.env.PORT || 3333, () => {
     console.log(`
 Server running in
 URL: ${process.env.API_URL}
