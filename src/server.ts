@@ -1,5 +1,4 @@
-import type { Application } from 'express';
-import express from 'express';
+import express, { type Application } from 'express';
 import cors from 'cors';
 import userRoutes from './routes/user.routes.js';
 import taskRoutes from './routes/task.routes.js';

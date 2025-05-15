@@ -18,7 +18,10 @@ route.post('/login', userController.login);
 route.get('/', validToken, userController.getUsers);
 
 // Lista um usuário pela publicId
-route.get('/:id', validToken, userController.findById);
+route.get('/publicId/:id', validToken, userController.findByPublicId);
+
+// Rota para listar os dados do usuário pelo ID (UUID/ROTA PRIVADA)
+route.get('/profile', validToken, userController.userProfileData)
 
 // Rota para redefinir a senha que o usuário esqueceu
 route.patch('/forgot-change-password', userController.forgotChangePassword);

@@ -17,11 +17,9 @@ export class UserController {
 
       const verifyToken = await userService.createUserService(userData);
 
-      await userService.sendVerificationEmail(userData.email, verifyToken);
-
-      res
-        .status(201)
-        .json({ message: 'Usuário cadastrado! Verifique seu e-mail.' });
+      await userService.sendVerificationEmail(userData.name, userData.email, verifyToken);
+      
+      res.status(201).json({ message: 'Usuário cadastrado! Verifique seu e-mail.' });
     } catch (err) {
       if (err instanceof z.ZodError) {
         const message =
@@ -39,10 +37,8 @@ export class UserController {
   async verifyEmail(req: Request, res: Response) {
     try {
       const { token } = req.query;
-      // console.log(token);
 
       const user = await userService.findByToken(token as string);
-      // console.log(user);
 
       if (!user) {
         res.status(400).send({ message: 'Token inválido ou expirado.' });
@@ -67,11 +63,11 @@ export class UserController {
     }
   }
 
-  async findById(req: Request, res: Response) {
+  async findByPublicId(req: Request, res: Response) {
     try {
       const publicId = Number(req.params.id);
 
-      const user = await userService.findByIdService(publicId);
+      const user = await userService.findByPublicIdService(publicId);
 
       if (!user) {
         res.status(400).send({ message: 'Usuário não encontrado' });
@@ -88,12 +84,12 @@ export class UserController {
       const publicId = Number(req.params.id);
       const userData = userSubsetSchema.parse(req.body);
 
-      if (!(await userService.findByIdService(publicId))) {
+      if (!(await userService.findByPublicIdService(publicId))) {
         res.status(404).send({ message: 'Usuário não encontrado' });
         return;
       }
 
-      await userService.updateUserById(publicId, userData);
+      await userService.updateUserPublicById(publicId, userData);
       res.status(201).send('Usuário atualizado.');
       return;
     } catch (error) {
@@ -104,7 +100,7 @@ export class UserController {
   async login(req: Request, res: Response) {
     try {
       const { email, password } = loginUserSchema.parse(req.body);
-      
+
       const token = await authService.authLogin({ email, password });
 
       res.status(200).send({ token });
@@ -150,6 +146,23 @@ export class UserController {
 
       res.status(500).json({ message });
       return;
+    }
+  }
+
+  async userProfileData(req: Request, res: Response) {
+    try {
+      const userId = req.user;
+
+      if (!userId) {
+        console.error('userId ausente no req.user após validação do token.');
+        throw new Error('Erro interno no servidor! Tente novamente.');
+      }
+
+      const user = await userService.findByInternalIdService(userId);
+
+      res.status(200).send(user);
+    } catch (error) {
+      console.log(error);
     }
   }
 }
