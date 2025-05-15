@@ -39,8 +39,10 @@ export class UserController {
   async verifyEmail(req: Request, res: Response) {
     try {
       const { token } = req.query;
+      // console.log(token);
 
       const user = await userService.findByToken(token as string);
+      // console.log(user);
 
       if (!user) {
         res.status(400).send({ message: 'Token inválido ou expirado.' });
@@ -49,7 +51,7 @@ export class UserController {
 
       await userService.userUpdateByToken(user.id);
 
-      res.redirect(`${process.env.API_URL}/login?emailVerified=true`);
+      res.redirect(`${process.env.FRONT_URL}/login?emailVerified=true`);
     } catch (error) {
       console.log(error);
     }
@@ -102,6 +104,7 @@ export class UserController {
   async login(req: Request, res: Response) {
     try {
       const { email, password } = loginUserSchema.parse(req.body);
+      
       const token = await authService.authLogin({ email, password });
 
       res.status(200).send({ token });

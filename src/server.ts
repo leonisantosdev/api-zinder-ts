@@ -9,7 +9,7 @@ import './config/env/env.js';
 const app: Application = express();
 app.use(
   cors({
-    origin: `${process.env.API_URL}`,
+    origin: `${process.env.FRONT_URL}`,
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     allowedHeaders: 'Content-Type, Authorization',
     credentials: false,

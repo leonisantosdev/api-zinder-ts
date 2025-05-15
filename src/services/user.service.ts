@@ -48,7 +48,7 @@ export class UserServices {
     const url = `${process.env.API_URL}/user/verify-email?token=${token}`;
 
     const mailOptions = {
-      from: `${process.env.EMAIL_USER}`,
+      from: `"Equipe Zinder" ${process.env.EMAIL_USER}`,
       to: email,
       subject: `Verificação de E-mail`,
       html: `
@@ -88,7 +88,7 @@ export class UserServices {
   async findByToken(token: string) {
     const user = await prisma.user.findFirst({
       where: {
-        verifyToken: token as string,
+        verifyToken: token,
       },
     });
 
@@ -171,10 +171,10 @@ export class UserServices {
     });
 
     const transporter = getTransporter();
-    const url = `${process.env.API_URL}/forgot-change-password?token=${token}`;
+    const url = `${process.env.FRONT_URL}/forgot-change-password?token=${token}`;
 
     const mailOptions = {
-      from: `${process.env.EMAIL_USER}`,
+      from: `"Equipe Zinder" ${process.env.EMAIL_USER}`,
       to: email,
       subject: `Redefinição de Senha`,
       html: `

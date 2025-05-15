@@ -1,11 +1,7 @@
 import { prisma } from '../config/prisma/prismaConfig.js';
 import jwt from 'jsonwebtoken';
-import { assert } from 'console';
 import type { loginUser } from '../schemas/user.schema.js';
 import { verifyPassword } from '../utils/hashPassword.js';
-
-const JWT_SECRET = process.env.JWT_SECRET!;
-assert(JWT_SECRET);
 
 export class AuthService {
   async authLogin({ email, password }: loginUser) {
@@ -40,6 +36,13 @@ export class AuthService {
   }
 
   private genToken(id: string) {
+    const JWT_SECRET = process.env.JWT_SECRET;
+
+    if(!JWT_SECRET) {
+      console.log("Erro na JWT_SECRET, provavelmente undefined.")
+      throw new Error("Erro interno no servidor!")
+    }
+
     return jwt.sign({ id: id }, JWT_SECRET, { expiresIn: '1d' });
   }
 
