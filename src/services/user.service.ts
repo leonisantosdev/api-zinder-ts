@@ -3,8 +3,8 @@ import { hashPassword } from '../utils/hashPassword.js';
 import type { UserSubset } from '../schemas/user.schema.js';
 import { v4 as uuidv4 } from 'uuid';
 import { getTransporter } from '../utils/sendEmailUser.js';
-import { addMinutes } from 'date-fns';
 import { generateShortUUIDUsername } from '../utils/randomShortName.js';
+import dayjs from 'dayjs';
 
 export class UserServices {
   async createUserService({ name, email, password }: UserSubset) {
@@ -16,9 +16,7 @@ export class UserServices {
     const userExists = await this.findUserByEmail(email);
 
     if (userExists) {
-      throw new Error(
-        'E-mail já cadastrado. Tente novamente com outro e-mail.'
-      );
+      throw new Error('E-mail já cadastrado. Tente novamente com outro e-mail.');
     }
 
     await prisma.user.create({
@@ -30,7 +28,13 @@ export class UserServices {
         role: 'user',
         isActive: true,
         isEmailVerified: false,
-        verifyToken: emailVerifyToken,
+        verifyAccountToken: {
+          create: {
+            token: emailVerifyToken,
+            expiresAt: dayjs().add(5, 'minute').toDate(),
+            expired: false,
+          },
+        },
       },
     });
 
@@ -52,7 +56,7 @@ export class UserServices {
 
           <p style="font-size: 16px; line-height: 1.6; margin: 30px 0; text-align: center; color: #555;">
             Estamos muito felizes em ter você conosco.  
-            Você está a um passo de transformar o fluxo de trabalho da sua empresa. ✨
+            Você está a um passo de transformar o fluxo de trabalho da sua empresa.
           </p>
 
           <div style="text-align: center; margin: 30px 0;">
@@ -75,7 +79,7 @@ export class UserServices {
           <hr style="border: none; border-top: 1px solid #ddd; margin: 40px 0;" />
 
           <div style="text-align: left;">
-            <h3 style="color: #1e233b; font-size: 20px; margin-bottom: 10px;">O que o Zinder pode fazer pela sua empresa? 💼</h3>
+            <h3 style="color: #1e233b; font-size: 20px; margin-bottom: 10px;">O que o Zinder pode fazer pela sua empresa?</h3>
             <ul style="color: #555; font-size: 16px; line-height: 1.8; padding-left: 20px; margin-top: 10px;">
               <li>📋 <strong>Organização total de processos:</strong> centralize tarefas, comunicações e prazos.</li>
               <li>📊 <strong>Gestão clara e eficiente:</strong> acompanhe o progresso das equipes e elimine gargalos.</li>
@@ -90,12 +94,12 @@ export class UserServices {
           </div>
 
           <p style="color: #888; font-size: 14px; margin-top: 40px; text-align: center;">
-            Se você não criou uma conta, basta ignorar este e-mail. ❌
+            Se você não criou uma conta, basta ignorar este e-mail.
           </p>
 
           <footer style="text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee;">
             <p style="font-size: 14px; color: #aaa; margin: 0;">Abraços,</p>
-            <p style="font-size: 14px; color: #aaa; margin: 0;">Equipe Zinder 💙</p>
+            <p style="font-size: 14px; color: #aaa; margin: 0;">Equipe Zinder!</p>
           </footer>
         </div>
       `,
@@ -105,23 +109,39 @@ export class UserServices {
   }
 
   async findByToken(token: string) {
-    const user = await prisma.user.findFirst({
-      where: {
-        verifyToken: token,
-      },
+    const verifyToken = await prisma.verifyAccountToken.findUnique({
+      where: { token },
+      include: { user: true },
     });
 
-    return user;
+    const isExpired = !verifyToken || verifyToken.expired || dayjs().isAfter(verifyToken.expiresAt);
+
+    if (isExpired) {
+      if (verifyToken && !verifyToken.expired) {
+        await prisma.verifyAccountToken.update({
+          where: { token },
+          data: { expired: true },
+        });
+      }
+
+      return null;
+    }
+
+    return verifyToken;
   }
 
   async userUpdateByToken(userId: string) {
-    await prisma.user.update({
-      where: { id: userId },
-      data: {
-        isEmailVerified: true,
-        verifyToken: null,
-      },
-    });
+    await prisma.$transaction([
+      prisma.user.update({
+        where: { id: userId },
+        data: {
+          isEmailVerified: true,
+        },
+      }),
+      prisma.verifyAccountToken.deleteMany({
+        where: { userId },
+      }),
+    ]);
   }
 
   async findAllUsers(): Promise<object> {
@@ -147,10 +167,7 @@ export class UserServices {
     });
   }
 
-  async updateUserPublicById(
-    publicId: number,
-    { name, email, password }: UserSubset
-  ) {
+  async updateUserPublicById(publicId: number, { name, email, password }: UserSubset) {
     const hashedPassword = await hashPassword(password);
 
     await prisma.user.update({
@@ -173,13 +190,11 @@ export class UserServices {
     });
 
     if (!user) {
-      throw new Error(
-        'Nenhum usuário encontrado com esse e-mail. Tente novamente.'
-      );
+      throw new Error('Nenhum usuário encontrado com esse e-mail. Tente novamente.');
     }
 
     const token = uuidv4();
-    const expiresAt = addMinutes(new Date(), 3);
+    const expiresAt = dayjs().add(3, 'minute').toDate();
 
     await prisma.passwordResetToken.create({
       data: {
@@ -222,7 +237,7 @@ export class UserServices {
         </p>
       </div>
       <footer style="font-family: Arial, sans-serif; text-align: center; font-size: 12px; color: #999; margin-top: 40px;">
-        <p>© ${new Date().getFullYear()} Zinder. Todos os direitos reservados.</p>
+        <p>© ${dayjs().year()} Zinder. Todos os direitos reservados.</p>
       </footer>
     `,
     };
@@ -232,9 +247,7 @@ export class UserServices {
 
   async findUserByEmail(email: string) {
     const user = await prisma.user.findUnique({
-      where: {
-        email,
-      },
+      where: { email },
     });
 
     return user;

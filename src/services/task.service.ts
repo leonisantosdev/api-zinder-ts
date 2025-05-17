@@ -2,10 +2,7 @@ import { prisma } from '../config/prisma/prismaConfig.js';
 import type { TaskSubset } from '../schemas/task.schema.js';
 
 export class TaskServices {
-  async createTaskService(
-    { title, description, priority, type, status }: TaskSubset,
-    userId: string
-  ) {
+  async createTaskService({ title, description, priority, type, status }: TaskSubset, userId: string) {
     await prisma.task.create({
       data: {
         title,

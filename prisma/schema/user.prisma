@@ -5,7 +5,6 @@ model User {
   name              String
   email             String    @unique
   isEmailVerified   Boolean
-  verifyToken       String?
   password          String
   profilePictureUrl String?
   birthDate         DateTime?
@@ -17,6 +16,7 @@ model User {
   lastLogin         DateTime?
 
   // Relações
+  verifyAccountToken  VerifyAccountToken?
   tasks               Task[]               @relation("UserTasks")
   createdTasks        Task[]               @relation("CreatedTasks")
   updatedTasks        Task[]               @relation("UpdatedTasks")

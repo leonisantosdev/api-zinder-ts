@@ -6,7 +6,11 @@
   "scripts": {
     "dev": "cross-env NODE_ENV=development nodemon --exec tsx src/server.ts",
     "start": "cross-env NODE_ENV=production node dist/server.js",
-    "build": "tsc"
+    "build": "tsc",
+    "migrate:dev": "dotenv -e .env.development -- prisma migrate dev",
+    "generate": "dotenv -e .env.development -- prisma generate",
+    "db:reset": "dotenv -e .env.development -- prisma migrate reset",
+    "studio:dev": "dotenv -e .env.development -- npx prisma studio"
   },
   "prisma": {
     "schema": "prisma/schema"
@@ -24,6 +28,7 @@
     "@types/nodemailer": "^6.4.17",
     "@types/uuid": "^10.0.0",
     "cross-env": "^7.0.3",
+    "dotenv-cli": "^8.0.0",
     "nodemon": "^3.1.10",
     "prisma": "^6.7.0",
     "ts-node": "^10.9.2",
@@ -36,10 +41,13 @@
     "bcryptjs": "^3.0.2",
     "cors": "^2.8.5",
     "date-fns": "^4.1.0",
+    "dayjs": "^1.11.13",
     "dotenv": "^16.5.0",
     "express": "^5.1.0",
     "jsonwebtoken": "^9.0.2",
     "nodemailer": "^6.10.1",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1",
     "tsconfig-paths": "^4.2.0",
     "uuid": "^11.1.0",
     "winston": "^3.17.0",

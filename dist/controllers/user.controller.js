@@ -17,8 +17,7 @@ export class UserController {
         }
         catch (err) {
             if (err instanceof z.ZodError) {
-                const message = ((_a = err.errors[0]) === null || _a === void 0 ? void 0 : _a.message) ||
-                    'Erro de validação, verifique os dados enviados.';
+                const message = ((_a = err.errors[0]) === null || _a === void 0 ? void 0 : _a.message) || 'Erro de validação, verifique os dados enviados.';
                 res.status(400).json({ message });
                 return;
             }
@@ -96,9 +95,7 @@ export class UserController {
         try {
             const { email } = req.body;
             await userService.sendEmailToChangePassword(email);
-            res
-                .status(200)
-                .send({ message: 'Verifique seu e-mail para redefinir sua senha!' });
+            res.status(200).send({ message: 'Verifique seu e-mail para redefinir sua senha!' });
         }
         catch (err) {
             const message = err.message || 'Erro interno do servidor.';

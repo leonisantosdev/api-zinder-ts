@@ -17,6 +17,6 @@
     "ts-node": {
     "esm": true
   },
-  "include": ["src/**/*"],  // Certifica-se de que todos os arquivos .ts da pasta src sejam incluídos na compilação
+  "include": ["src/**/*", "src/@types/**/*"],  // Certifica-se de que todos os arquivos .ts da pasta src sejam incluídos na compilação
   "exclude": ["node_modules"]  // Exclui node_modules da compilação
 }

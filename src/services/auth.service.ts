@@ -38,9 +38,9 @@ export class AuthService {
   private genToken(id: string) {
     const JWT_SECRET = process.env.JWT_SECRET;
 
-    if(!JWT_SECRET) {
-      console.log("Erro na JWT_SECRET, provavelmente undefined.")
-      throw new Error("Erro interno no servidor!")
+    if (!JWT_SECRET) {
+      console.log('Erro na JWT_SECRET, provavelmente undefined.');
+      throw new Error('Erro interno no servidor!');
     }
 
     return jwt.sign({ id: id }, JWT_SECRET, { expiresIn: '1d' });

@@ -1,4 +1,5 @@
 import { prisma } from '../config/prisma/prismaConfig.js';
+import dayjs from 'dayjs';
 
 export class TokenServices {
   async validateTokenReset(token: string) {
@@ -11,7 +12,7 @@ export class TokenServices {
       throw new Error('Token inválido');
     }
 
-    if (resetToken.expiresAt < new Date() || resetToken.used === true) {
+    if (dayjs(resetToken.expiresAt).isBefore(dayjs()) || resetToken.used === true) {
       throw new Error('Token expirado.');
     }
   }

@@ -3,7 +3,7 @@ export const transformName = (name) => {
         .trim()
         .toLowerCase()
         .split(' ')
-        .map((word) => {
+        .map(word => {
         return word[0].toLocaleUpperCase().concat(word.substring(1));
     })
         .join(' ');

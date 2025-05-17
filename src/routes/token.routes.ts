@@ -5,9 +5,6 @@ const route = express.Router();
 const tokenController = new TokenController();
 
 // Valida o token de redefinição de senha para que não seja acessada por qualquer usuário(ROTA PRIVADA)
-route.post(
-  '/validate-forgot-password-token',
-  tokenController.validateTokenUserForgotPassword
-);
+route.post('/validate-forgot-password-token', tokenController.validateTokenUserForgotPassword);
 
 export default route;

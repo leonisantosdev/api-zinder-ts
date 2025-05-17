@@ -18,13 +18,11 @@ export class UserController {
       const verifyToken = await userService.createUserService(userData);
 
       await userService.sendVerificationEmail(userData.name, userData.email, verifyToken);
-      
+
       res.status(201).json({ message: 'Usuário cadastrado! Verifique seu e-mail.' });
     } catch (err) {
       if (err instanceof z.ZodError) {
-        const message =
-          err.errors[0]?.message ||
-          'Erro de validação, verifique os dados enviados.';
+        const message = err.errors[0]?.message || 'Erro de validação, verifique os dados enviados.';
         res.status(400).json({ message });
         return;
       }
@@ -38,18 +36,21 @@ export class UserController {
     try {
       const { token } = req.query;
 
-      const user = await userService.findByToken(token as string);
+      const verifyToken = await userService.findByToken(token as string);
 
-      if (!user) {
-        res.status(400).send({ message: 'Token inválido ou expirado.' });
+      if (!verifyToken) {
+        res.redirect(`${process.env.FRONT_URL}/login?error=tokenExpired`);
         return;
       }
 
-      await userService.userUpdateByToken(user.id);
+      await userService.userUpdateByToken(verifyToken.user.id);
 
       res.redirect(`${process.env.FRONT_URL}/login?emailVerified=true`);
     } catch (error) {
-      console.log(error);
+      const message = (error as Error).message || 'Erro interno do servidor.';
+
+      res.status(500).json({ message });
+      return;
     }
   }
 
@@ -93,7 +94,10 @@ export class UserController {
       res.status(201).send('Usuário atualizado.');
       return;
     } catch (error) {
-      console.log(error);
+      const message = (error as Error).message || 'Erro interno do servidor.';
+
+      res.status(500).json({ message });
+      return;
     }
   }
 
@@ -119,9 +123,7 @@ export class UserController {
 
       await userService.sendEmailToChangePassword(email);
 
-      res
-        .status(200)
-        .send({ message: 'Verifique seu e-mail para redefinir sua senha!' });
+      res.status(200).send({ message: 'Verifique seu e-mail para redefinir sua senha!' });
     } catch (err) {
       const message = (err as Error).message || 'Erro interno do servidor.';
 

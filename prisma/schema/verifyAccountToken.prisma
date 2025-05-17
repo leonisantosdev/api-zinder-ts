@@ -1,0 +1,11 @@
+model VerifyAccountToken {
+  id        String   @id @default(uuid())
+  token     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  expired   Boolean
+  userId    String   @unique              
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("VerifyAccountToken")
+}
