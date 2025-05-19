@@ -8,19 +8,21 @@ export class AuthService {
     const user = await this.verifyEmail(email);
 
     if (!user) {
-      throw new Error('Senha ou e-mail inválido.');
+      throw new Error('Invalid email');
     }
 
     const isMatch = await verifyPassword(password, user.password);
+    console.log(isMatch)
+
 
     if (!isMatch) {
-      throw new Error('Senha ou e-mail inválido.');
+      throw new Error('Invalid Password');
     }
 
     const emailVerified = await this.isValidEmail(email);
 
     if (!emailVerified) {
-      throw new Error('Por favor, verifique seu e-mail antes de fazer login.');
+      throw new Error('Email Not Authorized');
     }
 
     const token = this.genToken(user.id);

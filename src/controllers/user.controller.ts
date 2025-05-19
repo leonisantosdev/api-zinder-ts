@@ -20,15 +20,20 @@ export class UserController {
       await userService.sendVerificationEmail(userData.name, userData.email, verifyToken);
 
       res.status(201).json({ message: 'Usuário cadastrado! Verifique seu e-mail.' });
-    } catch (err) {
-      if (err instanceof z.ZodError) {
-        const message = err.errors[0]?.message || 'Erro de validação, verifique os dados enviados.';
-        res.status(400).json({ message });
-        return;
-      }
+    } catch (error) {
+      const messageTypeError = (error as Error).message;
 
-      const message = (err as Error).message || 'Erro interno do servidor.';
-      res.status(500).json({ message });
+      switch (messageTypeError) {
+        case 'Invalid Regex Password':
+          res.status(400).json({ message: 'A senha deve conter pelo menos 8 caracteres, incluindo uma letra maiúscula, e um caractere especial.' });
+          break;
+        case 'Duplicated Email':
+          res.status(409).json({ message: 'E-mail já cadastrado. Tente novamente com outro e-mail.' });
+          break;
+        default:
+          res.status(500).json({ message: 'Erro interno no servidor! Tente novamente.' });
+          break;
+      }
     }
   }
 
@@ -36,7 +41,8 @@ export class UserController {
     try {
       const { token } = req.query;
 
-      const verifyToken = await userService.findByToken(token as string);
+      const verifyToken = await userService.findByToken(token);
+      console.log(verifyToken);
 
       if (!verifyToken) {
         res.redirect(`${process.env.FRONT_URL}/login?error=tokenExpired`);
@@ -110,10 +116,22 @@ export class UserController {
       res.status(200).send({ token });
       return;
     } catch (error) {
-      const message = (error as Error).message || 'Erro interno do servidor.';
+      const messageTypeError = (error as Error).message;
 
-      res.status(500).json({ message });
-      return;
+      switch (messageTypeError) {
+        case 'Invalid Password':
+          res.status(400).json({ message: 'Senha ou e-mail inválidos.' });
+          break;
+        case 'Invalid Email':
+          res.status(400).json({ message: 'Senha ou email inválidos.' });
+          break;
+        case 'Email Not Authorized':
+          res.status(403).json({ message: 'Confirme seu e-mail antes de fazer login.' });
+          break;
+        default:
+          res.status(500).json({ message: 'Erro interno no servidor! Tente novamente.' });
+          break;
+      }
     }
   }
 
@@ -124,10 +142,17 @@ export class UserController {
       await userService.sendEmailToChangePassword(email);
 
       res.status(200).send({ message: 'Verifique seu e-mail para redefinir sua senha!' });
-    } catch (err) {
-      const message = (err as Error).message || 'Erro interno do servidor.';
+    } catch (error) {
+      const messageTypeError = (error as Error).message;
 
-      res.status(500).json({ message });
+      switch (messageTypeError) {
+        case 'Invalid Email User Forgot':
+          res.status(400).json({ message: 'Nenhum usuário encontrado com esse e-mail. Tente novamente.' });
+          break;
+        default:
+          res.status(500).json({ message: 'Erro interno no servidor.' });
+          break;
+      }
     }
   }
 
@@ -144,9 +169,19 @@ export class UserController {
 
       res.status(200).send({ message: 'Senha redefinida com sucesso!' });
     } catch (error) {
-      const message = (error as Error).message || 'Erro interno do servidor.';
+      const messageTypeError = (error as Error).message;
 
-      res.status(500).json({ message });
+      switch (messageTypeError) {
+        case 'Invalid Token or User':
+          res.status(400).json({ message: 'Token inválido ou usuário não encontrado.' });
+          break;
+        case 'Invalid Regex Password':
+          res.status(400).json({ message: 'A senha deve conter pelo menos 8 caracteres, incluindo uma letra maiúscula, e um caractere especial.' });
+          break;
+        default:
+          res.status(500).json({ message: 'Erro interno no servidor.' });
+          break;
+      }
       return;
     }
   }
@@ -157,14 +192,27 @@ export class UserController {
 
       if (!userId) {
         console.error('userId ausente no req.user após validação do token.');
-        throw new Error('Erro interno no servidor! Tente novamente.');
+        throw new Error('Invalid UserId In Req');
       }
 
       const user = await userService.findByInternalIdService(userId);
 
       res.status(200).send(user);
     } catch (error) {
-      console.log(error);
+      const messageTypeError = (error as Error).message;
+
+      switch (messageTypeError) {
+        case 'Invalid UserId In Req':
+          res.status(401).json({ message: 'Falha no login! Tente novamente.' })
+          break;
+        default:
+          res.status(500).json({ message: 'Erro interno no servidor! Tente novamente.' })
+          break;
+      }
     }
   }
+
+  // async resendEmailConfirmation(req: Request, res: Response) => {
+    
+  // }
 }

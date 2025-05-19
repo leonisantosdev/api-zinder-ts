@@ -32,4 +32,7 @@ route.patch('/:id', validToken, userController.updateUser);
 // Rota para enviar email para redefinição de senha do usuário
 route.post('/send-email-forgot-password', userController.forgotPassword);
 
+// Rota para reenviar o email para confirmação de conta do usuário
+// route.post('/resend-email-confirmation', userController.resendEmailConfirmation)
+
 export default route;

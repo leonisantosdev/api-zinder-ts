@@ -12,7 +12,8 @@
     "baseUrl": ".",                        // Base para resolver caminhos relativos
     "paths": {
       "*": ["node_modules/*", "src/*"]     // Ajusta os caminhos para src e node_modules
-    }
+    },
+    "resolveJsonModule": true,
   },
     "ts-node": {
     "esm": true

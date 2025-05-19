@@ -28,16 +28,18 @@ export class UserController {
     async verifyEmail(req, res) {
         try {
             const { token } = req.query;
-            const user = await userService.findByToken(token);
-            if (!user) {
-                res.status(400).send({ message: 'Token inválido ou expirado.' });
+            const verifyToken = await userService.findByToken(token);
+            if (!verifyToken) {
+                res.redirect(`${process.env.FRONT_URL}/login?error=tokenExpired`);
                 return;
             }
-            await userService.userUpdateByToken(user.id);
+            await userService.userUpdateByToken(verifyToken.user.id);
             res.redirect(`${process.env.FRONT_URL}/login?emailVerified=true`);
         }
         catch (error) {
-            console.log(error);
+            const message = error.message || 'Erro interno do servidor.';
+            res.status(500).json({ message });
+            return;
         }
     }
     async getUsers(req, res) {
@@ -75,7 +77,9 @@ export class UserController {
             return;
         }
         catch (error) {
-            console.log(error);
+            const message = error.message || 'Erro interno do servidor.';
+            res.status(500).json({ message });
+            return;
         }
     }
     async login(req, res) {

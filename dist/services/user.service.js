@@ -25,8 +25,8 @@ export class UserServices {
                 verifyAccountToken: {
                     create: {
                         token: emailVerifyToken,
-                        expiresAt: dayjs().add(15, 'second').toDate(),
-                        expired: false
+                        expiresAt: dayjs().add(5, 'minute').toDate(),
+                        expired: false,
                     },
                 },
             },
@@ -98,12 +98,21 @@ export class UserServices {
         await transporter.sendMail(mailOptions);
     }
     async findByToken(token) {
-        var _a;
-        const verifyRecord = await prisma.verifyAccountToken.findUnique({
+        const verifyToken = await prisma.verifyAccountToken.findUnique({
             where: { token },
             include: { user: true },
         });
-        return (_a = verifyRecord === null || verifyRecord === void 0 ? void 0 : verifyRecord.user) !== null && _a !== void 0 ? _a : null;
+        const isExpired = !verifyToken || verifyToken.expired || dayjs().isAfter(verifyToken.expiresAt);
+        if (isExpired) {
+            if (verifyToken && !verifyToken.expired) {
+                await prisma.verifyAccountToken.update({
+                    where: { token },
+                    data: { expired: true },
+                });
+            }
+            return null;
+        }
+        return verifyToken;
     }
     async userUpdateByToken(userId) {
         await prisma.$transaction([

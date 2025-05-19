@@ -13,10 +13,10 @@ export class UserServices {
 
     let username = generateShortUUIDUsername();
 
-    const userExists = await this.findUserByEmail(email);
+    const userEmailExists = await this.findUserByEmail(email);
 
-    if (userExists) {
-      throw new Error('E-mail já cadastrado. Tente novamente com outro e-mail.');
+    if (userEmailExists) {
+      throw new Error('Duplicated Email');
     }
 
     await prisma.user.create({
@@ -31,7 +31,7 @@ export class UserServices {
         verifyAccountToken: {
           create: {
             token: emailVerifyToken,
-            expiresAt: dayjs().add(5, 'minute').toDate(),
+            expiresAt: dayjs().add(10, 'second').toDate(),
             expired: false,
           },
         },
@@ -190,7 +190,7 @@ export class UserServices {
     });
 
     if (!user) {
-      throw new Error('Nenhum usuário encontrado com esse e-mail. Tente novamente.');
+      throw new Error('Invalid Email User Forgot');
     }
 
     const token = uuidv4();
@@ -262,7 +262,7 @@ export class UserServices {
     });
 
     if (!resetToken || !resetToken.user || resetToken?.used) {
-      throw new Error('Token inválido ou usuário não encontrado.');
+      throw new Error('Invalid Token or User');
     }
 
     await prisma.user.update({

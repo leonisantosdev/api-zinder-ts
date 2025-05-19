@@ -1,0 +1,242 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "API Zinder",
+    "version": "1.0.0",
+    "description": "Documentação da API Zinder",
+    "contact": {
+      "name": "consultazinder@gmail.com"
+    }
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3333",
+      "description": "Servidor local"
+    }
+  ],
+  "paths": {
+    "/user/register": {
+      "post": {
+        "tags": ["User"],
+        "summary": "Cria um novo usuário",
+        "description": "Cadastra um novo usuário, gera token de verificação e envia o token para o e-mail.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "example": "John Doe"
+                  },
+                  "email": {
+                    "type": "string",
+                    "format": "email",
+                    "example": "johndoe@gmail.com"
+                  },
+                  "password": {
+                    "type": "string",
+                    "description": "Senha deve conter pelo menos 8 caracteres, incluindo letras maiúsculas, minúsculas, números e caracteres especiais.",
+                    "example": "SenhaSegura@123"
+                  },
+                  "confirmPassword": {
+                    "type": "string",
+                    "example": "SenhaSegura@123"
+                  }
+                },
+                "required": ["name", "email", "password", "confirmPassword"]
+              },
+              "example": {
+                "name": "John Doe",
+                "email": "johndoe@gmail.com",
+                "password": "SenhaSegura@123",
+                "confirmPassword": "SenhaSegura@123"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Usuário cadastrado com sucesso. E-mail de verificação enviado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "message": "Usuário cadastrado! Verifique seu e-mail."
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Erro de validação, usuário digitou alguma informação incorreta.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "message": "A senha deve conter pelo menos 8 caracteres, incluindo uma letra maiúscula, e um caractere especial."
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Tentativa de cadastro com e-mail já existente no servidor.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "message": "E-mail já cadastrado. Tente novamente com outro e-mail."
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro interno do servidor, nenhuma das respostas anteriores.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "message": "Erro interno no servidor! Tente novamente."
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user/login": {
+      "post": {
+        "tags": ["User"],
+        "summary": "Loga no servidor",
+        "description": "Loga no servidor gerando um token de authenticação único que identificará quem é o usuário que está logando.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "format": "email",
+                    "example": "johndoe@gmail.com"
+                  },
+                  "password": {
+                    "type": "string",
+                    "example": "SenhaSegura@123"
+                  }
+                },
+                "required": ["email", "password"]
+              },
+              "example": {
+                "email": "johndoe@gmail.com",
+                "password": "SenhaSegura@123"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Login realizado com sucesso.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "token": {
+                      "type": "string", 
+                      "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.F89021JKLDSJA2MS982Ss919djeD92JADNiksq02SPDDOASnd.FTHLoCDgXR2ugxFtePs8RQ4B7cUrj0r4iocqwJD4DG2"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Credenciais inválidas.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "message": "Senha ou email inválidos."
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Credenciais inválidas.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "message": "Por favor, verifique seu e-mail antes de fazer login."
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro interno do servidor.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "message": "Erro interno do servidor."
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
